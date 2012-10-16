@@ -1,5 +1,4 @@
 #include "FastMath.h"
-#include <cmath>
 #include <cassert>
 #include <cstdlib>
 #include <iostream>

@@ -8,10 +8,8 @@
 
 //--- Standard icludes ---------------------------------------------------------
 #include <iostream>
-#include <cmath>
 #include <cassert>
 #include <limits>
-#include <omp.h>
 #include <stdexcept>
 
 //------------------------------------------------------------------------------
@@ -50,7 +48,7 @@ NBodyWnd::~NBodyWnd()
 {}
 
 //------------------------------------------------------------------------------
-void NBodyWnd::Init(int num)
+void NBodyWnd::Init()
 {
 /*
   m_galaxy.Reset(15000,    // radius of the galaxy
@@ -219,7 +217,7 @@ void NBodyWnd::DrawVelocity()
     const Vec2D &vel = pStars[i].m_vel;
     double r = pStars[i].m_a; //(pStars[i].m_a + pStars[i].m_b)/2;
 
-    // umrechnen in km/s
+    // convert to km/s
     double v = sqrt(vel.x*vel.x + vel.y*vel.y);   // pc / timestep
     v /= dt_in_sec;          // v in pc/sec
     v *= Constant::PC_TO_KM; // v in km/s

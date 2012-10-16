@@ -1,4 +1,9 @@
-  
+I (Gabor Berenyi) forked this Linux project for an iOS demo inspired by the default wallpaper of OS X: http://www.tomsguide.com/us/mac-os-x-lion-wallpaper-andromeda,news-12164.html. 
+
+It's also a cross-platform app development test using C++, OpenGL and SDL (the latter would not be our first choice for new projects). Topic on SO: http://stackoverflow.com/questions/12896730/gravity-driven-fluid-dynamics-computation.
+
+---------------------------------------------------------------------------------------
+
   ________       .__                        
  /  _____/_____  |  | _____  ___  ______.__.
 /   \  ___\__  \ |  | \__  \ \  \/  <   |  |

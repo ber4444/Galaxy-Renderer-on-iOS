@@ -1,20 +1,10 @@
-/*
- * File:   main.cpp
- * Author: user
- *
- * Created on 5. Juli 2009, 22:15
- */
+#ifdef linux
+// this file is replaced by SDLMain.mm on OS X
 
 #include <cstdlib>
 #include <iostream>
-
-//------------------------------------------------------------------------------
 #include "NBodyWnd.h"
 
-//------------------------------------------------------------------------------
-/*
- *
- */
 int main(int argc, char** argv)
 {
   try
@@ -36,4 +26,4 @@ int main(int argc, char** argv)
 
   return (EXIT_SUCCESS);
 }
-
+#endif

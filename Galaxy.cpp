@@ -1,7 +1,6 @@
 #include "Galaxy.h"
 #include <cstdlib>
 #include <stdexcept>
-#include <cmath>
 #include <iostream>
 
 //------------------------------------------------------------------------
