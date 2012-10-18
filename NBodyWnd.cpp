@@ -172,7 +172,7 @@ void NBodyWnd::Render()
   if (m_flags & dspHELP)
     DrawHelp();
 
-  SDL_GL_SwapBuffers();
+  SDL_GL_SwapWindow(window);// Swap on-screen/off-screen buffers (double buffering)
 }
 
 
@@ -654,7 +654,7 @@ void NBodyWnd::OnProcessEvents(uint8_t type)
 //               SaveToTGA();
 //               break;
 
-          case SDLK_KP1:
+          case SDLK_KP_1:
                m_galaxy.Reset(12000,    // radius of the galaxy
                               4000,     // radius of the core
                               0.0004,   // angluar offset of the density wave per parsec of radius
@@ -666,7 +666,7 @@ void NBodyWnd::OnProcessEvents(uint8_t type)
                               30000);   // total number of stars
                               break;
 
-          case SDLK_KP2:
+          case SDLK_KP_2:
                 m_galaxy.Reset(13000,    // radius of the galaxy
                                4000,     // radius of the core
                                0.0004,   // angluar offset of the density wave per parsec of radius
@@ -677,7 +677,7 @@ void NBodyWnd::OnProcessEvents(uint8_t type)
                                300,      // orbital velovity at the edge of the disk
                                30000);   // total number of stars
                                break;
-          case SDLK_KP3:
+          case SDLK_KP_3:
                m_galaxy.Reset(13000,    // radius of the galaxy
                               4000,     // radius of the core
                               0.0004,   // angluar offset of the density wave per parsec of radius
@@ -690,7 +690,7 @@ void NBodyWnd::OnProcessEvents(uint8_t type)
                               break;
 
           // Typ Sa
-          case SDLK_KP4:
+          case SDLK_KP_4:
                m_galaxy.Reset(20000,    // radius of the galaxy
                               4000,     // radius of the core
                               0.0004,   // angluar offset of the density wave per parsec of radius
@@ -703,7 +703,7 @@ void NBodyWnd::OnProcessEvents(uint8_t type)
                               break;
 
           // Typ SBb
-          case SDLK_KP5:
+          case SDLK_KP_5:
                m_galaxy.Reset(15000,    // radius of the galaxy
                               4000,     // radius of the core
                               0.0003,   // angluar offset of the density wave per parsec of radius
@@ -716,7 +716,7 @@ void NBodyWnd::OnProcessEvents(uint8_t type)
                               break;
 
           // zum debuggen
-          case SDLK_KP6:
+          case SDLK_KP_6:
                m_galaxy.Reset(15000,    // radius of the galaxy
                               4000,     // radius of the core
                               0.0003,   // angluar offset of the density wave per parsec of radius
@@ -729,7 +729,7 @@ void NBodyWnd::OnProcessEvents(uint8_t type)
                               break;
 
           // für Wikipedia: realistische Rotationskurve
-          case SDLK_KP7:
+          case SDLK_KP_7:
                m_galaxy.Reset(12000,    // radius of the galaxy
                               2000,     // radius of the core
                               0.0004,   // angluar offset of the density wave per parsec of radius
@@ -742,7 +742,7 @@ void NBodyWnd::OnProcessEvents(uint8_t type)
                               break;
 
 
-          case SDLK_KP8:
+          case SDLK_KP_8:
                m_galaxy.Reset(12000,    // radius of the galaxy
                               2000,     // radius of the core
                               0.0004,   // angluar offset of the density wave per parsec of radius
@@ -755,7 +755,7 @@ void NBodyWnd::OnProcessEvents(uint8_t type)
                               break;
 
 
-          case SDLK_KP0:
+          case SDLK_KP_0:
                m_galaxy.Reset(15000,    // radius of the galaxy
                               4000,     // radius of the core
                               0.000306, // angluar offset of the density wave per parsec of radius

@@ -71,7 +71,7 @@ void SDLWindow::TextOut(const char *fmt, ...)
     
     glPushAttrib(GL_LIST_BIT);     // Pushes the Display List Bits
     glListBase(s_fontBase - 32);   // Sets base character to 32
-    glCallLists(strlen(text), GL_UNSIGNED_BYTE, text); // Draws the text
+    glCallLists((int)strlen(text), GL_UNSIGNED_BYTE, text); // Draws the text
     glPopAttrib();                 // Pops the Display List Bits
 }
 
@@ -96,7 +96,7 @@ void SDLWindow::TextOut(int x, int y, const char *fmt, ...)
     
     glPushAttrib(GL_LIST_BIT);     // Pushes the Display List Bits
     glListBase(s_fontBase - 32);   // Sets base character to 32
-    glCallLists(strlen(text), GL_UNSIGNED_BYTE, text); // Draws the text
+    glCallLists((int)strlen(text), GL_UNSIGNED_BYTE, text); // Draws the text
     glPopAttrib();                 // Pops the Display List Bits
 }
 
@@ -135,22 +135,26 @@ SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &c
 ,m_camPos(0, 0, 2)
 ,m_camLookAt(0, 0, 0)
 ,m_camOrient(0, 1, 0)
-,m_pScreen(NULL)
+,surface(NULL)
 ,m_fontBase(0)
 ,m_texStar(0)
 ,m_bRunning(true)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) == -1)
+
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
         throw std::runtime_error(SDL_GetError());
     atexit(SDL_Quit);
     
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 0 );
+    SDL_GL_SetAttribute( SDL_GL_RETAINED_BACKING, 1 ); 
     
-    m_pScreen = SDL_SetVideoMode(width, height, 16, SDL_OPENGL);
-    if (!m_pScreen)
+    if ((window = SDL_CreateWindow(caption.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                   width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS)) == NULL)
+        throw std::runtime_error(SDL_GetError());     
+    
+    if ((surface = SDL_GetWindowSurface(window)) == NULL)
         throw std::runtime_error(SDL_GetError());
-    
-    SetCaption(caption);
     
     m_width = width;
     m_height = height;
@@ -364,11 +368,6 @@ void SDLWindow::AdjustCamera()
     glMatrixMode(GL_MODELVIEW);
 }
 
-void SDLWindow::SetCaption(const std::string &caption)
-{
-    // SDL_WM_SetCaption(caption.c_str(), NULL);
-}
-
 double SDLWindow::GetFOV() const
 {
     return m_fov;
@@ -458,7 +457,7 @@ void SDLWindow::MainLoop()
 
 SDL_Surface *SDLWindow::Surface()
 {
-    return m_pScreen;
+    return surface;
 }
 
 int SDLWindow::GetWidth() const

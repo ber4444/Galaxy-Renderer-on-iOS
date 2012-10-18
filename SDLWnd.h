@@ -14,8 +14,8 @@
 #include <OpenGL/glext.h>
 #endif
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_opengl.h> 
+#include "SDL.h"
+#include "SDL_opengl.h" 
 
 #include "Vector.h"
 
@@ -28,7 +28,6 @@ public:
     virtual ~SDLWindow();
     void MainLoop();
     void ExitMainLoop();
-    void SetCaption(const std::string &caption);
     int GetWidth() const;
     int GetHeight() const;
     virtual void Render() = 0;
@@ -87,7 +86,8 @@ protected:
     Vec3D m_camLookAt; ///< Point atwhich the camera is aimed
     Vec3D m_camOrient; ///< orientation of the camera (rotation as it aims at its target)
     
-    SDL_Surface *m_pScreen;
+    SDL_Surface *surface;
+    SDL_Window* window;
     GLuint m_fontBase;
     GLuint m_texStar;
     
