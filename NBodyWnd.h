@@ -16,7 +16,7 @@ public:
     virtual ~NBodyWnd();
     
     virtual void Render();
-    virtual void OnProcessEvents(uint8_t type);
+    virtual void OnProcessEvents(SDL_Event &e);
     
     void Init();
     

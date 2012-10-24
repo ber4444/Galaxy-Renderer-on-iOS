@@ -35,7 +35,7 @@ public:
 protected:
     
     virtual void PollEvents();
-    virtual void OnProcessEvents(uint8_t type);
+    virtual void OnProcessEvents(SDL_Event &e);
     
     //-----------------------------------------
     // Camera setup
@@ -64,7 +64,6 @@ protected:
     void ScaleAxis(double scale);
     double GetFOV() const;
     SDL_Surface *Surface();
-    SDL_Event m_event;
     
     static void InitFont();
     static void KillFont();

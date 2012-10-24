@@ -126,8 +126,7 @@ Vec3D SDLWindow::GetOGLPos(int x, int y)
 }
 
 SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &caption)
-:m_event()
-,m_fov(axisLen)
+:m_fov(axisLen)
 ,m_width(0)
 ,m_height(0)
 ,m_fps(0)
@@ -475,21 +474,22 @@ void SDLWindow::ExitMainLoop()
     m_bRunning = false;
 }
 
-void SDLWindow::OnProcessEvents(uint8_t type)
+void SDLWindow::OnProcessEvents(SDL_Event &e)
 {}
 
 void SDLWindow::PollEvents()
 {
-    while (SDL_PollEvent(&m_event))
+    SDL_Event e;
+    while (SDL_PollEvent(&e))
     {
-        switch (m_event.type)
+        switch (e.type)
         {
             case SDL_QUIT:
                 ExitMainLoop();
                 break;
                 
             default:
-                OnProcessEvents(m_event.type);
+                OnProcessEvents(e);
                 break;
         } // switch event type
     }

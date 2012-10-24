@@ -512,15 +512,10 @@ NBodyWnd::Color NBodyWnd::ColorFromTemperature(double temp) const
 }
 
 //------------------------------------------------------------------------------
-void NBodyWnd::OnProcessEvents(uint8_t type)
+void NBodyWnd::OnProcessEvents(SDL_Event &e)
 {
-  switch (type)
-  {
-    case SDL_MOUSEBUTTONDOWN:
-         break;
-
-    case SDL_KEYDOWN:
-        switch (m_event.key.keysym.sym)
+    if (e.type == SDL_KEYDOWN)
+        switch (e.key.keysym.sym)
         {
           case SDLK_1:
                m_camOrient = 0;
@@ -785,12 +780,5 @@ void NBodyWnd::OnProcessEvents(uint8_t type)
                ScaleAxis(1.1);
                SetCameraOrientation(Vec3D(0,1,0));
                break;
-
-          default:
-               break;
-
         }
-
-        break;
-  }
 }
