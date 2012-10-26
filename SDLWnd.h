@@ -3,15 +3,37 @@
 
 #include <string>
 
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+
+#if TARGET_OS_IPHONE==1
+#import <OpenGLES/ES1/gl.h> // include ES 1.1, we don't need ES2
+#import "glu.h"
+#import <OpenGLES/ES1/glext.h>
+#define GL_POINT_SPRITE GL_POINT_SPRITE_OES
+#define glOrtho glOrthof
+
+#elif TARGET_IPHONE_SIMULATOR
+#error "Please debug on an iPhone"
+
+#elif TARGET_OS_MAC
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <OpenGL/glext.h>
+
+#else
+#error "Unsupported Apple platform (only OS X and iPhone are supported out of the box)"
+#endif
+
+#else
+#error "Replace this line with #define linux, and prepare to do minor adjustments"
+#endif
+
 #ifdef linux
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glext.h>
 #include <GL/glx.h>
-#else
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <OpenGL/glext.h>
 #endif
 
 #include "SDL.h"
@@ -51,8 +73,9 @@ protected:
     //-----------------------------------------
     // Basic graphics functionality
     //-----------------------------------------
-    
+#if TARGET_OS_IPHONE==0
     void DrawAxis(const Vec2D &origin);
+#endif
     int GetFPS() const;
     void SaveToTGA(const std::string &sName);
     void SaveToTGA(int idx = -1);
@@ -65,6 +88,7 @@ protected:
     double GetFOV() const;
     SDL_Surface *Surface();
     
+#ifdef linux
     static void InitFont();
     static void KillFont();
     static void TextOut(const char *fmt, ...);
@@ -72,6 +96,10 @@ protected:
     static Vec3D GetOGLPos(int x, int y);
     
     static GLuint s_fontBase;
+#else
+    static void TextOut(const char *fmt, ...) {};
+    static void TextOut(int x, int y, const char *fmt, ...) {};
+#endif
     
 protected:
     
@@ -87,11 +115,10 @@ protected:
     
     SDL_Surface *surface;
     SDL_Window* window;
-    GLuint m_fontBase;
     GLuint m_texStar;
     
-    // function pointer for point sprite extension
 #ifdef linux
+    // function pointer for point sprite extension
     PFNGLPOINTPARAMETERFARBPROC  glPointParameterfARB;
     PFNGLPOINTPARAMETERFVARBPROC glPointParameterfvARB;
 #endif

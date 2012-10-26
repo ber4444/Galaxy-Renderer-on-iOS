@@ -8,16 +8,16 @@
 #include <ctime>
 #include <cmath>
 
+#ifdef linux
 // static functions / variables
 GLuint SDLWindow::s_fontBase = 0;
 
 void SDLWindow::InitFont()
 {
-#ifdef linux
     Display *dpy;          /* Our current X display */
     XFontStruct *fontInfo; /* Our font info */
     
-    /* Sotrage for 96 characters */
+    /* Storage for 96 characters */
     s_fontBase = glGenLists(96);
     
     /* Get our current display long enough to get the fonts */
@@ -44,7 +44,6 @@ void SDLWindow::InitFont()
     
     /* close the display now that we're done with it */
     XCloseDisplay(dpy);
-#endif
 }
 
 void SDLWindow::KillFont()
@@ -124,6 +123,7 @@ Vec3D SDLWindow::GetOGLPos(int x, int y)
     
     return Vec3D(posX, posY, posZ);
 }
+#endif
 
 SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &caption)
 :m_fov(axisLen)
@@ -135,7 +135,6 @@ SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &c
 ,m_camLookAt(0, 0, 0)
 ,m_camOrient(0, 1, 0)
 ,surface(NULL)
-,m_fontBase(0)
 ,m_texStar(0)
 ,m_bRunning(true)
 {
@@ -163,7 +162,7 @@ SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &c
 
 SDLWindow::~SDLWindow()
 {
-    KillFont();
+    //KillFont(); /////////////////// TODO
     SDL_Quit();
 }
 
@@ -182,6 +181,7 @@ void SDLWindow::InitPointSpriteExtension()
         glPointParameterfARB  = (PFNGLPOINTPARAMETERFEXTPROC)SDL_GL_GetProcAddress("glPointParameterfARB");
         glPointParameterfvARB = (PFNGLPOINTPARAMETERFVEXTPROC)SDL_GL_GetProcAddress("glPointParameterfvARB");
 #endif
+        
         if( !glPointParameterfARB || !glPointParameterfvARB )
         {
             throw std::runtime_error("One or more GL_EXT_point_parameters functions were not found");
@@ -220,8 +220,10 @@ void SDLWindow::InitPointSpriteExtension()
     {
         if ( tex->format->Rmask == 0x000000ff)
             texture_format = GL_RGB;
+#if TARGET_OS_IPHONE==0
         else
             texture_format = GL_BGR;
+#endif
     }
     else
         throw std::runtime_error("image is not truecolor");
@@ -255,7 +257,7 @@ void SDLWindow::InitGL()	        // We call this right after our OpenGL window i
     glClearColor(0.0f, 0.0f, 0.1f, 0.0f);  // black background
     glViewport(0, 0, GetWidth(), GetHeight());
     
-    SDLWindow::InitFont();
+    // SDLWindow::InitFont(); //////////////////// TODO
     InitPointSpriteExtension();
 }
 
@@ -377,6 +379,7 @@ int SDLWindow::GetFPS() const
     return m_fps;
 }
 
+#if TARGET_OS_IPHONE==0
 void SDLWindow::DrawAxis(const Vec2D &origin)
 {
     glColor3f(0.3, 0.3, 0.3);
@@ -426,6 +429,7 @@ void SDLWindow::DrawAxis(const Vec2D &origin)
     
     glPopMatrix();
 }
+#endif
 
 /** \brief Main render loop
  

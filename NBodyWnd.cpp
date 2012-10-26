@@ -145,15 +145,16 @@ void NBodyWnd::Render()
     m_galaxy.SingleTimeStep(100000); // time in years
   }
 
-  if (m_flags & dspAXIS)
-    DrawAxis(Vec2D(0, 0));
-
-  if (m_flags & dspDENSITY_WAVES)
-    DrawDensityWaves(50, m_galaxy.GetFarFieldRad());
-
   if (m_flags & dspSTAT)
     DrawStat();
 
+#if TARGET_OS_IPHONE==0
+  if (m_flags & dspAXIS)
+    DrawAxis(Vec2D(0, 0));
+    
+  if (m_flags & dspDENSITY_WAVES)
+    DrawDensityWaves(50, m_galaxy.GetFarFieldRad());
+    
   if (m_flags & dspDUST)
     DrawDust();
 
@@ -165,9 +166,10 @@ void NBodyWnd::Render()
 
   if (m_flags & dspRADII)
     DrawGalaxyRadii();
-
+    
   if (m_flags & dspVELOCITY)
     DrawVelocity();
+#endif
 
   if (m_flags & dspHELP)
     DrawHelp();
@@ -175,8 +177,29 @@ void NBodyWnd::Render()
   SDL_GL_SwapWindow(window);// Swap on-screen/off-screen buffers (double buffering)
 }
 
-
-void NBodyWnd::DrawEllipsis(double a, double b, double angle)
+#if TARGET_OS_IPHONE==1
+void NBodyWnd::DrawEllipse(double a, double b, double angle){
+    /* TODO: it's something like:
+    GLfloat xradius = 0.25;
+    GLfloat yradius = 0.5;
+    
+    GLfloat point[2];
+    
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(2, GL_FLOAT, 0, point);
+    glPointSize(2.0);
+    
+    for (float angle = 0; angle < 2*M_PI; angle += 0.1) {
+        glPushMatrix();
+        point[0] = cos(angle)*xradius;
+        point[1] = sin(angle)*yradius;
+        glTranslatef(point[0], point[1], 0.0);
+        glDrawArrays(GL_POINTS, 0, 1);
+        glPopMatrix();
+    }*/
+}
+#else
+void NBodyWnd::DrawEllipse(double a, double b, double angle)
 {
   const int steps = 100;
   const double x = 0;
@@ -202,72 +225,75 @@ void NBodyWnd::DrawEllipsis(double a, double b, double angle)
    }
    glEnd();
 }
+#endif
 
+
+#if TARGET_OS_IPHONE==0
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawVelocity()
 {
-  Star *pStars = m_galaxy.GetStars();
-
-  double dt_in_sec = m_galaxy.GetTimeStep() * Constant::SEC_PER_YEAR;
-  glPointSize(1);
-  glColor3f(0.5, 0.7, 0.5);
-  glBegin(GL_POINTS);
-  for (int i=0; i<m_galaxy.GetNumStars(); ++i)
-  {
-    const Vec2D &vel = pStars[i].m_vel;
-    double r = pStars[i].m_a; //(pStars[i].m_a + pStars[i].m_b)/2;
-
-    // convert to km/s
-    double v = sqrt(vel.x*vel.x + vel.y*vel.y);   // pc / timestep
-    v /= dt_in_sec;          // v in pc/sec
-    v *= Constant::PC_TO_KM; // v in km/s
-
-    glVertex3f(r, v*10, 0.0f);
-  }
-  glEnd();
-/*
-  // Draw Mass Distribution
-  glBegin(GL_LINE_STRIP);
-  glColor3f(0.5, 0.5, 0.7);
-  double dh = m_galaxy.GetFarFieldRad()/100.0;
-  for (int i=0; i<100; ++i)
-  {
-    glVertex3f(i*dh, m_galaxy.m_numberByRad[i], 0.0f);
-  }
-  glEnd();
-
-  // Draw Intensity curve
-  double dh = m_galaxy.GetFarFieldRad()/100.0;
-  glBegin(GL_LINE_STRIP);
-  glColor3f(0.8, 0.5, 0.7);
-  for (int i=0; i<100; ++i)
-  {
-    double r = i*dh / m_galaxy.GetCoreRad();
-    glVertex3f(i*dh, m_galaxy.GetCoreRad() * Intensity(r,
-                                                        1,   // Kernradius (in Kernradien...)
-                                                        1.0, // Maximalintensität
-                                                        1.0, // Skalenlänge, in Kernradien innerhalb der die Hälfte der Scheibenleuchtkraft angesiedelt ist
-                                                        1.0),// Faktor for Kernleuchtkraft
-               0.0f);
-  }
-  glEnd();
-*/
-
+    Star *pStars = m_galaxy.GetStars();
+    
+    double dt_in_sec = m_galaxy.GetTimeStep() * Constant::SEC_PER_YEAR;
+    glPointSize(1);
+    glColor3f(0.5, 0.7, 0.5);
+    glBegin(GL_POINTS);
+    for (int i=0; i<m_galaxy.GetNumStars(); ++i)
+    {
+        const Vec2D &vel = pStars[i].m_vel;
+        double r = pStars[i].m_a; //(pStars[i].m_a + pStars[i].m_b)/2;
+        
+        // umrechnen in km/s
+        double v = sqrt(vel.x*vel.x + vel.y*vel.y);   // pc / timestep
+        v /= dt_in_sec;          // v in pc/sec
+        v *= Constant::PC_TO_KM; // v in km/s
+        
+        glVertex3f(r, v*10, 0.0f);
+    }
+    glEnd();
+    /*
+     // Draw Mass Distribution
+     glBegin(GL_LINE_STRIP);
+     glColor3f(0.5, 0.5, 0.7);
+     double dh = m_galaxy.GetFarFieldRad()/100.0;
+     for (int i=0; i<100; ++i)
+     {
+     glVertex3f(i*dh, m_galaxy.m_numberByRad[i], 0.0f);
+     }
+     glEnd();
+     
+     // Draw Intensity curve
+     double dh = m_galaxy.GetFarFieldRad()/100.0;
+     glBegin(GL_LINE_STRIP);
+     glColor3f(0.8, 0.5, 0.7);
+     for (int i=0; i<100; ++i)
+     {
+     double r = i*dh / m_galaxy.GetCoreRad();
+     glVertex3f(i*dh, m_galaxy.GetCoreRad() * Intensity(r,
+     1,   // Kernradius (in Kernradien...)
+     1.0, // Maximalintensität
+     1.0, // Skalenlänge, in Kernradien innerhalb der die Hälfte der Scheibenleuchtkraft angesiedelt ist
+     1.0),// Faktor for Kernleuchtkraft
+     0.0f);
+     }
+     glEnd();
+     */
+    
 }
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawDensityWaves(int num, double rad)
 {
-  double dr = rad / num;
-
-  for (int i=0; i<=num; ++i)
-  {
-    double r = (i+1) * dr;
-    glColor3f(1,1,1);
-    DrawEllipsis(r,
-                 r * m_galaxy.GetExcentricity(r),
-                 Constant::RAD_TO_DEG * m_galaxy.GetAngularOffset(r));
-  }
+    double dr = rad / num;
+    
+    for (int i=0; i<=num; ++i)
+    {
+        double r = (i+1) * dr;
+        glColor3f(1,1,1);
+        DrawEllipse(r,
+                     r * m_galaxy.GetExcentricity(r),
+                     Constant::RAD_TO_DEG * m_galaxy.GetAngularOffset(r));
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -414,6 +440,7 @@ void NBodyWnd::DrawH2()
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_BLEND);
 }
+#endif
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawStat()
@@ -421,7 +448,11 @@ void NBodyWnd::DrawStat()
   double x0 = 10, y0 = 20, dy = 20;
   int line = 0;
 
+#if TARGET_OS_IPHONE==0
   glColor3f(1, 1, 1);
+#else
+  glColor4f(1, 1, 1, 0);
+#endif
   TextOut(x0, y0 + dy * line++, "FPS:      %d", GetFPS());
   TextOut(x0, y0 + dy * line++, "Time:     %2.2e y", m_galaxy.GetTime());
   TextOut(x0, y0 + dy * line++, "RadCore:     %d pc", (int)m_galaxy.GetCoreRad());
@@ -433,7 +464,7 @@ void NBodyWnd::DrawStat()
   TextOut(x0, y0 + dy * line++, "AngOff:      %1.4f deg/pc", m_galaxy.GetAngularOffset());
 }
 
-//------------------------------------------------------------------------------
+#if TARGET_OS_IPHONE==0
 void NBodyWnd::DrawGalaxyRadii()
 {
   double r;
@@ -442,23 +473,24 @@ void NBodyWnd::DrawGalaxyRadii()
   r = m_galaxy.GetCoreRad();
   if (r>0)
   {
-    DrawEllipsis(r, r, 0);
+    DrawEllipse(r, r, 0);
     glRasterPos2f(0, r+500);
     TextOut("Core");
   }
 
   glColor3f(0, 1, 0);
   r = m_galaxy.GetRad();
-  DrawEllipsis(r, r, 0);
+  DrawEllipse(r, r, 0);
   glRasterPos2f(0, r+500);
   TextOut("Disk");
 
   glColor3f(1, 0, 0);
   r = m_galaxy.GetFarFieldRad();
-  DrawEllipsis(r, r, 0);
+  DrawEllipse(r, r, 0);
   glRasterPos2f(0, r+500);
   TextOut("Intergalactic medium");
 }
+#endif
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawHelp()
@@ -467,7 +499,11 @@ void NBodyWnd::DrawHelp()
   int line = 0;
   Vec3D p;
 
-  glColor3f(1, 1, 1);
+#if TARGET_OS_IPHONE==0
+    glColor3f(1, 1, 1);
+#else
+    glColor4f(1, 1, 1, 0);
+#endif
   TextOut(x0, y0 + dy * line++, "Keyboard commands");
   TextOut(x0, y0 + dy * line++, "Camera");
   TextOut(x0, y0 + dy * line++, "  1     - centric; fixed");
@@ -484,14 +520,17 @@ void NBodyWnd::DrawHelp()
   TextOut(x0, y0 + dy * line++, "  f     - decrease core size");
   TextOut(x0, y0 + dy * line++, "  t     - increase galaxy size");
   TextOut(x0, y0 + dy * line++, "  g     - decrease galaxy size");
+  TextOut(x0, y0 + dy * line++, "  p     - velocity graph");
   TextOut(x0, y0 + dy * line++, "Display features");
   TextOut(x0, y0 + dy * line++, "  F1    - Help screen");
   TextOut(x0, y0 + dy * line++, "  F2    - Galaxy data");
-  TextOut(x0, y0 + dy * line++, "  F3    - Stars (on/off)");
+#if TARGET_OS_IPHONE==0
+  TextOut(x0, y0 + dy * line++, "  F3    - Render stars in white (on/off)");
   TextOut(x0, y0 + dy * line++, "  F4    - Dust (on/off)");
   TextOut(x0, y0 + dy * line++, "  F5    - H2 Regions (on/off)");
   TextOut(x0, y0 + dy * line++, "  F6    - Density waves (Star orbits)");
   TextOut(x0, y0 + dy * line++, "  F7    - Axis");
+#endif
   TextOut(x0, y0 + dy * line++, "  F8    - Radii");
   TextOut(x0, y0 + dy * line++, "  +     - Zoom in");
   TextOut(x0, y0 + dy * line++, "  -     - Zoom out");
@@ -499,7 +538,7 @@ void NBodyWnd::DrawHelp()
   TextOut(x0, y0 + dy * line++, "  pause - halt simulation");
   TextOut(x0, y0 + dy * line++, "  F12   - Write frames to TGA");
   TextOut(x0, y0 + dy * line++, "Predefined Galaxies");
-  TextOut(x0, y0 + dy * line++, "  Keypad 0 - 4" );
+  TextOut(x0, y0 + dy * line++, "  Keypad 0 - 8" );
 }
 
 //------------------------------------------------------------------------------
@@ -574,6 +613,7 @@ void NBodyWnd::OnProcessEvents(SDL_Event &e)
                 m_galaxy.SetRad(std::max(m_galaxy.GetRad()-1000, 0.0));
                 break;
 
+                /////////// undocumented:
           case SDLK_z:
           case SDLK_y:
                 m_galaxy.SetSigma(m_galaxy.GetSigma()+0.05);
@@ -582,7 +622,8 @@ void NBodyWnd::OnProcessEvents(SDL_Event &e)
           case SDLK_h:
                 m_galaxy.SetSigma(std::max(m_galaxy.GetSigma()-0.05, 0.05));
                 break;
-
+                /////////////////////////////
+                
           case  SDLK_F1:
                 std::cout << "Display:  help screen" << ((m_flags & dspHELP) ? "off" : "on") << "\n";
                 m_flags ^= dspHELP;
@@ -595,6 +636,7 @@ void NBodyWnd::OnProcessEvents(SDL_Event &e)
                 m_flags &= ~dspHELP;
                 break;
 
+#if TARGET_OS_IPHONE==0
           case  SDLK_F3:
                 std::cout << "Display:  Toggling stars " << ((m_flags & dspSTARS) ? "off" : "on") << "\n";
                 if (m_starRenderType==2)
@@ -618,26 +660,27 @@ void NBodyWnd::OnProcessEvents(SDL_Event &e)
                 std::cout << "Display:  Toggling h2 regions " << ((m_flags & dspH2) ? "off" : "on") << "\n";
                 m_flags ^= dspH2;
                 break;
-
+                
           case SDLK_F6:
                 std::cout << "Display:  Density waves axis " << ((m_flags & dspDENSITY_WAVES) ? "off" : "on") << "\n";
                 m_flags ^= dspDENSITY_WAVES;
+                break;
+                
+          case SDLK_F8:
+                std::cout << "Display:  Radii" << ((m_flags & dspRADII) ? "off" : "on") << "\n";
+                m_flags ^= dspRADII;
                 break;
 
           case SDLK_F7:
                 std::cout << "Display:  Axis" << ((m_flags & dspAXIS) ? "off" : "on") << "\n";
                 m_flags ^= dspAXIS;
                 break;
-
-          case SDLK_F8:
-                std::cout << "Display:  Radii" << ((m_flags & dspRADII) ? "off" : "on") << "\n";
-                m_flags ^= dspRADII;
-                break;
-
+            
           case  SDLK_p:
                 std::cout << "Display:  Toggling Velocity graph " << ((m_flags & dspVELOCITY) ? "off" : "on") << "\n";
                 m_flags ^= dspVELOCITY;
                 break;
+#endif
 
           case  SDLK_PAUSE:
                 std::cout << "Simulation:  pause " << ((m_flags & dspPAUSE) ? "off" : "on") << "\n";

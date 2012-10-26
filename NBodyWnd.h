@@ -31,10 +31,12 @@ private:
         dspPAUSE          = 1 << 3,
         dspHELP           = 1 << 4,
         dspROI            = 1 << 5,
-        dspDENSITY_WAVES  = 1 << 6,
         dspRADII          = 1 << 7,
-        dspVELOCITY       = 1 << 8,
         dspDUST           = 1 << 9,
+#if TARGET_OS_IPHONE==0
+        dspDENSITY_WAVES  = 1 << 6,
+        dspVELOCITY       = 1 << 8,
+#endif
         dspH2             = 1 << 10
     };
     
@@ -47,16 +49,18 @@ private:
     
     NBodyWnd(const NBodyWnd& orig);
     
+#if TARGET_OS_IPHONE==0
     void DrawStars();
     void DrawDust();
     void DrawH2();
-    void DrawStat();
-    void DrawHelp();
     void DrawGalaxyRadii();
-    void DrawCenterOfMass();
     void DrawDensityWaves(int num, double rad);
     void DrawVelocity();
-    void DrawEllipsis(double a, double b, double angle);
+#endif
+    void DrawStat();
+    void DrawHelp();
+    void DrawCenterOfMass();
+    void DrawEllipse(double a, double b, double angle);
     Color ColorFromTemperature(double temp) const;
     
     int m_camOrient;    ///< Index of the camera orientation to use

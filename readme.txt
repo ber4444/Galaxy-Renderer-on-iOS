@@ -1,6 +1,10 @@
-I (Gabor Berenyi) forked this Linux project for an iOS demo inspired by the default wallpaper of OS X: http://www.tomsguide.com/us/mac-os-x-lion-wallpaper-andromeda,news-12164.html. 
+(C) 2012 Gabor Berenyi. I forked the original Linux project for an iOS demo, inspired by the default wallpaper of OS X: http://www.tomsguide.com/us/mac-os-x-lion-wallpaper-andromeda,news-12164.html. The code is covered by the BSD-License cited below.
 
-It's also a cross-platform app development test using C++, OpenGL and SDL (the latter would not be our first choice for new projects). Topic on SO: http://stackoverflow.com/questions/12896730/gravity-driven-fluid-dynamics-computation.
+It's also a cross-platform app development test using C++, OpenGL ES and SDL2 (the latter would not be our first choice for new projects). 
+
+Topics on SO: http://stackoverflow.com/questions/12896730/gravity-driven-fluid-dynamics-computation and http://gamedev.stackexchange.com/questions/40249/sdl2-with-opengl-weird-results-whats-wrong
+
+And here is a link to another similar project: http://www.youtube.com/watch?v=CbN5PBmvu_0, which is based on this simpler algorithm: http://www.openprocessing.org/sketch/700
 
 ---------------------------------------------------------------------------------------
 
