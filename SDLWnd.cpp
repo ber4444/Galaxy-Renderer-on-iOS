@@ -182,10 +182,12 @@ void SDLWindow::InitPointSpriteExtension()
         glPointParameterfvARB = (PFNGLPOINTPARAMETERFVEXTPROC)SDL_GL_GetProcAddress("glPointParameterfvARB");
 #endif
         
+#if TARGET_OS_IPHONE==0
         if( !glPointParameterfARB || !glPointParameterfvARB )
         {
             throw std::runtime_error("One or more GL_EXT_point_parameters functions were not found");
         }
+#endif
     }
     else
         throw std::runtime_error("GL_ARB_point_parameters extension is not present");
