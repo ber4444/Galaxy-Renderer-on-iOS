@@ -8,6 +8,10 @@
 #include <ctime>
 #include <cmath>
 
+// tmp, just for debugging:
+#include <iostream>
+using namespace std;
+
 #ifdef linux
 // static functions / variables
 GLuint SDLWindow::s_fontBase = 0;
@@ -18,7 +22,7 @@ void SDLWindow::InitFont()
     XFontStruct *fontInfo; /* Our font info */
     
     /* Storage for 96 characters */
-    s_fontBase = glGenLists(96);
+    s_fontBase = glGenLists(96); // note that OpenGL ES does not support display lists: http://pandorawiki.org/Porting_to_GLES_from_GL#Display_Lists
     
     /* Get our current display long enough to get the fonts */
     dpy = XOpenDisplay(NULL);
@@ -168,12 +172,32 @@ SDLWindow::~SDLWindow()
 
 void SDLWindow::InitPointSpriteExtension()
 {
+#ifndef GL_ARB_point_parameters
+#define GL_ARB_point_parameters 1
+    
+#define GL_POINT_SIZE_MIN_ARB 0x8126
+#define GL_POINT_SIZE_MAX_ARB 0x8127
+#define GL_POINT_FADE_THRESHOLD_SIZE_ARB 0x8128
+#define GL_POINT_DISTANCE_ATTENUATION_ARB 0x8129
+    
+    typedef void (GLAPIENTRY * PFNGLPOINTPARAMETERFARBPROC) (GLenum pname, GLfloat param);
+    typedef void (GLAPIENTRY * PFNGLPOINTPARAMETERFVARBPROC) (GLenum pname, GLfloat* params);
+    
+#define glPointParameterfARB GLEW_GET_FUN(__glewPointParameterfARB)
+#define glPointParameterfvARB GLEW_GET_FUN(__glewPointParameterfvARB)
+    
+#define GLEW_ARB_point_parameters GLEW_GET_VAR(__GLEW_ARB_point_parameters)
+    
+#endif /* GL_ARB_point_parameters */
+
+    
     const char *ext = (const char*)glGetString(GL_EXTENSIONS);
     
     /////////////////////////////////////////////////////////////////
     //Looking for GL_ARB_point_parameters extension
     /////////////////////////////////////////////////////////////////
     
+    cout <<  "extensions: " << ext << endl;
     if (strstr( ext, "GL_ARB_point_parameters" ))
     {
 #ifdef linux
@@ -213,14 +237,21 @@ void SDLWindow::InitPointSpriteExtension()
     GLenum texture_format;
     if (nOfColors == 4)     // contains an alpha channel
     {
+#if TARGET_OS_IPHONE==0
         if ( tex->format->Rmask == 0x000000ff)
+#endif
             texture_format = GL_RGBA;
+#if TARGET_OS_IPHONE==0
         else
             texture_format = GL_BGRA;
+#endif
     }
     else if (nOfColors == 3)     // no alpha channel
     {
+#if TARGET_OS_IPHONE==0
         if ( tex->format->Rmask == 0x000000ff)
+
+#endif
             texture_format = GL_RGB;
 #if TARGET_OS_IPHONE==0
         else
@@ -243,7 +274,11 @@ void SDLWindow::InitPointSpriteExtension()
 	// Edit the texture object's image data using the information SDL_Surface gives us
 	glTexImage2D(GL_TEXTURE_2D,
 	             0,
+#if TARGET_OS_IPHONE==0
 	             nOfColors,
+#else
+                 texture_format,
+#endif
 	             tex->w,
 	             tex->h,
 	             0,

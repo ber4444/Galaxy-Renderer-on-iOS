@@ -451,7 +451,7 @@ void NBodyWnd::DrawStat()
 #if TARGET_OS_IPHONE==0
   glColor3f(1, 1, 1);
 #else
-  glColor4f(1, 1, 1, 0);
+  glColor4f(1, 1, 1, 1.0f );
 #endif
   TextOut(x0, y0 + dy * line++, "FPS:      %d", GetFPS());
   TextOut(x0, y0 + dy * line++, "Time:     %2.2e y", m_galaxy.GetTime());
@@ -502,7 +502,7 @@ void NBodyWnd::DrawHelp()
 #if TARGET_OS_IPHONE==0
     glColor3f(1, 1, 1);
 #else
-    glColor4f(1, 1, 1, 0);
+    glColor4f(1, 1, 1, 1.0f );
 #endif
   TextOut(x0, y0 + dy * line++, "Keyboard commands");
   TextOut(x0, y0 + dy * line++, "Camera");

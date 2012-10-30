@@ -11,7 +11,10 @@
 #import "glu.h"
 #import <OpenGLES/ES1/glext.h>
 #define GL_POINT_SPRITE GL_POINT_SPRITE_OES
-#define glOrtho glOrthof
+#define GLdouble     GLfloat
+#define glClearDepth glClearDepthf
+#define glOrtho      glOrthof
+#define glFrustum    glFrustumf
 
 #elif TARGET_IPHONE_SIMULATOR
 #error "Please debug on an iPhone"
