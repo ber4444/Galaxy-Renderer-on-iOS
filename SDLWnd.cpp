@@ -8,10 +8,6 @@
 #include <ctime>
 #include <cmath>
 
-// tmp, just for debugging:
-#include <iostream>
-using namespace std;
-
 #ifdef linux
 // static functions / variables
 GLuint SDLWindow::s_fontBase = 0;
@@ -172,32 +168,9 @@ SDLWindow::~SDLWindow()
 
 void SDLWindow::InitPointSpriteExtension()
 {
-#ifndef GL_ARB_point_parameters
-#define GL_ARB_point_parameters 1
-    
-#define GL_POINT_SIZE_MIN_ARB 0x8126
-#define GL_POINT_SIZE_MAX_ARB 0x8127
-#define GL_POINT_FADE_THRESHOLD_SIZE_ARB 0x8128
-#define GL_POINT_DISTANCE_ATTENUATION_ARB 0x8129
-    
-    typedef void (GLAPIENTRY * PFNGLPOINTPARAMETERFARBPROC) (GLenum pname, GLfloat param);
-    typedef void (GLAPIENTRY * PFNGLPOINTPARAMETERFVARBPROC) (GLenum pname, GLfloat* params);
-    
-#define glPointParameterfARB GLEW_GET_FUN(__glewPointParameterfARB)
-#define glPointParameterfvARB GLEW_GET_FUN(__glewPointParameterfvARB)
-    
-#define GLEW_ARB_point_parameters GLEW_GET_VAR(__GLEW_ARB_point_parameters)
-    
-#endif /* GL_ARB_point_parameters */
-
-    
+#if TARGET_OS_IPHONE==0
     const char *ext = (const char*)glGetString(GL_EXTENSIONS);
     
-    /////////////////////////////////////////////////////////////////
-    //Looking for GL_ARB_point_parameters extension
-    /////////////////////////////////////////////////////////////////
-    
-    cout <<  "extensions: " << ext << endl;
     if (strstr( ext, "GL_ARB_point_parameters" ))
     {
 #ifdef linux
@@ -205,22 +178,16 @@ void SDLWindow::InitPointSpriteExtension()
         glPointParameterfARB  = (PFNGLPOINTPARAMETERFEXTPROC)SDL_GL_GetProcAddress("glPointParameterfARB");
         glPointParameterfvARB = (PFNGLPOINTPARAMETERFVEXTPROC)SDL_GL_GetProcAddress("glPointParameterfvARB");
 #endif
-        
-#if TARGET_OS_IPHONE==0
         if( !glPointParameterfARB || !glPointParameterfvARB )
-        {
             throw std::runtime_error("One or more GL_EXT_point_parameters functions were not found");
-        }
-#endif
     }
     else
         throw std::runtime_error("GL_ARB_point_parameters extension is not present");
-    
-    SDL_Surface *tex;
-    
+#endif
+        
     // texture loading taken from:
     // http://gpwiki.org/index.php/SDL:Tutorials:Using_SDL_with_OpenGL
-    tex = SDL_LoadBMP("particle.bmp");
+    SDL_Surface *tex = SDL_LoadBMP("particle.bmp");
     if (!tex)
         throw std::runtime_error("can't load star texture (particle.bmp).");
     
@@ -240,7 +207,8 @@ void SDLWindow::InitPointSpriteExtension()
 #if TARGET_OS_IPHONE==0
         if ( tex->format->Rmask == 0x000000ff)
 #endif
-            texture_format = GL_RGBA;
+            texture_format = GL_BGRA;//GL_RGBA;
+        // FIXME: not sure about this, maybe it should in fact be GL_BGRA and not GL_RGBA for iOS
 #if TARGET_OS_IPHONE==0
         else
             texture_format = GL_BGRA;
