@@ -387,6 +387,7 @@ int SDLWindow::GetFPS() const
 #if TARGET_OS_IPHONE==0
 void SDLWindow::DrawAxis(const Vec2D &origin)
 {
+#if debug_on_osx==0
     glColor3f(0.3, 0.3, 0.3);
     
     double s = std::pow(10, (int)(log10(m_fov/2))),
@@ -433,6 +434,7 @@ void SDLWindow::DrawAxis(const Vec2D &origin)
     glEnd();
     
     glPopMatrix();
+#endif
 }
 #endif
 

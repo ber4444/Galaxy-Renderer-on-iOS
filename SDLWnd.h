@@ -16,10 +16,7 @@
 #define glOrtho      glOrthof
 #define glFrustum    glFrustumf
 
-#elif TARGET_IPHONE_SIMULATOR
-#error "Please debug on an iPhone"
-
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC==1
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <OpenGL/glext.h>
@@ -43,6 +40,9 @@
 #include "SDL_opengl.h" 
 
 #include "Vector.h"
+
+// leaving out features that would be harder to port to GLES:
+#define debug_on_osx 1
 
 /** \brief Basic infrastructure for grafical output using SDL/OpenGL */
 class SDLWindow

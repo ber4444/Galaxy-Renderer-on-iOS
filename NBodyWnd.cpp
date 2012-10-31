@@ -201,6 +201,7 @@ void NBodyWnd::DrawEllipse(double a, double b, double angle){
 #else
 void NBodyWnd::DrawEllipse(double a, double b, double angle)
 {
+#if debug_on_osx==0
   const int steps = 100;
   const double x = 0;
   const double y = 0;
@@ -224,6 +225,7 @@ void NBodyWnd::DrawEllipse(double a, double b, double angle)
     glVertex3f(X, Y, 0);
    }
    glEnd();
+#endif
 }
 #endif
 
@@ -232,6 +234,7 @@ void NBodyWnd::DrawEllipse(double a, double b, double angle)
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawVelocity()
 {
+#if debug_on_osx==0
     Star *pStars = m_galaxy.GetStars();
     
     double dt_in_sec = m_galaxy.GetTimeStep() * Constant::SEC_PER_YEAR;
@@ -278,12 +281,13 @@ void NBodyWnd::DrawVelocity()
      }
      glEnd();
      */
-    
+#endif
 }
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawDensityWaves(int num, double rad)
 {
+#if debug_on_osx==0
     double dr = rad / num;
     
     for (int i=0; i<=num; ++i)
@@ -294,11 +298,13 @@ void NBodyWnd::DrawDensityWaves(int num, double rad)
                      r * m_galaxy.GetExcentricity(r),
                      Constant::RAD_TO_DEG * m_galaxy.GetAngularOffset(r));
     }
+#endif
 }
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawStars()
 {
+#if debug_on_osx==0
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
   float maxSize = 0.0f;
@@ -340,12 +346,13 @@ void NBodyWnd::DrawStars()
   glDisable(GL_POINT_SPRITE_ARB);
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
-
+#endif
 }
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawDust()
 {
+#if debug_on_osx==0
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
   float maxSize = 0.0f;
@@ -381,11 +388,13 @@ void NBodyWnd::DrawDust()
   glDisable(GL_POINT_SPRITE_ARB);
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_BLEND);
+#endif
 }
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawH2()
 {
+#if debug_on_osx==0
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
   float maxSize = 0.0f;
@@ -439,6 +448,7 @@ void NBodyWnd::DrawH2()
   glDisable(GL_POINT_SPRITE_ARB);
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_BLEND);
+#endif
 }
 #endif
 
@@ -467,6 +477,7 @@ void NBodyWnd::DrawStat()
 #if TARGET_OS_IPHONE==0
 void NBodyWnd::DrawGalaxyRadii()
 {
+#if debug_on_osx==0
   double r;
 
   glColor3f(1, 1, 0);
@@ -489,6 +500,7 @@ void NBodyWnd::DrawGalaxyRadii()
   DrawEllipse(r, r, 0);
   glRasterPos2f(0, r+500);
   TextOut("Intergalactic medium");
+#endif
 }
 #endif
 
@@ -520,18 +532,20 @@ void NBodyWnd::DrawHelp()
   TextOut(x0, y0 + dy * line++, "  f     - decrease core size");
   TextOut(x0, y0 + dy * line++, "  t     - increase galaxy size");
   TextOut(x0, y0 + dy * line++, "  g     - decrease galaxy size");
+#if TARGET_OS_IPHONE==0
   TextOut(x0, y0 + dy * line++, "  p     - velocity graph");
+#endif
   TextOut(x0, y0 + dy * line++, "Display features");
   TextOut(x0, y0 + dy * line++, "  F1    - Help screen");
   TextOut(x0, y0 + dy * line++, "  F2    - Galaxy data");
 #if TARGET_OS_IPHONE==0
-  TextOut(x0, y0 + dy * line++, "  F3    - Render stars in white (on/off)");
-  TextOut(x0, y0 + dy * line++, "  F4    - Dust (on/off)");
-  TextOut(x0, y0 + dy * line++, "  F5    - H2 Regions (on/off)");
+  TextOut(x0, y0 + dy * line++, "  F3    - renders stars in white");
+  TextOut(x0, y0 + dy * line++, "  F4    - turns off dust");
+  TextOut(x0, y0 + dy * line++, "  F5    - turns off H2 regions");
   TextOut(x0, y0 + dy * line++, "  F6    - Density waves (Star orbits)");
   TextOut(x0, y0 + dy * line++, "  F7    - Axis");
-#endif
   TextOut(x0, y0 + dy * line++, "  F8    - Radii");
+#endif
   TextOut(x0, y0 + dy * line++, "  +     - Zoom in");
   TextOut(x0, y0 + dy * line++, "  -     - Zoom out");
   TextOut(x0, y0 + dy * line++, "Misc");
