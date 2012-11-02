@@ -166,8 +166,10 @@ SDLWindow::~SDLWindow()
     SDL_Quit();
 }
 
-void SDLWindow::InitPointSpriteExtension()
+void SDLWindow::InitPointSpriteExtension() //////////////// FIXME FIXME FIXME
 {
+
+    
 #if TARGET_OS_IPHONE==0
     const char *ext = (const char*)glGetString(GL_EXTENSIONS);
     

@@ -17,6 +17,44 @@
 #ifndef __JWZGLES_I_H__
 #define __JWZGLES_I_H__
 
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+
+#if TARGET_OS_IPHONE==1
+#include <OpenGLES/ES1/gl.h> // include ES 1.1, we don't need ES2
+#include <OpenGLES/ES1/glext.h>
+#define GL_POINT_SPRITE GL_POINT_SPRITE_OES
+#define GL_GLEXT_PROTOTYPES
+#ifndef GL_ARB_point_parameters
+#define GL_POINT_SIZE_MIN_ARB                0x8126
+#define GL_POINT_SIZE_MAX_ARB                0x8127
+#define GL_POINT_FADE_THRESHOLD_SIZE_ARB     0x8128
+#define GL_POINT_DISTANCE_ATTENUATION_ARB    0x8129
+#endif
+
+#elif TARGET_OS_MAC==1
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <OpenGL/glext.h>
+
+#else
+#error "Unsupported Apple platform (only OS X and iPhone are supported out of the box)"
+#endif
+
+#else
+#error "Replace this line with #define linux, and prepare to do minor adjustments"
+#endif
+
+#ifdef linux
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glext.h>
+#include <GL/glx.h>
+# ifndef  GL_GLEXT_PROTOTYPES
+#  define GL_GLEXT_PROTOTYPES /* for glBindBuffer */
+# endif
+#endif
+
 #ifdef GL_VERSION_ES_CM_1_0  /* compiling against OpenGLES 1.x */
 
 /* These OpenGL 1.3 constants are not present in OpenGLES 1.
@@ -121,197 +159,197 @@
 extern "C" {
 #endif
     
-/* Prototypes for the things re-implemented in jwzgles.c 
- */
-
- int  jwzgles_glGenLists (int n);
- void jwzgles_glNewList (int id, int mode);
- void jwzgles_glEndList (void);
- void jwzgles_glDeleteLists (int list, int range);
- void jwzgles_glBegin (int mode);
- void jwzgles_glNormal3fv (const GLfloat *);
- void jwzgles_glNormal3f (GLfloat x, GLfloat y, GLfloat z);
- void jwzgles_glTexCoord1f (GLfloat s);
- void jwzgles_glTexCoord2fv (const GLfloat *);
- void jwzgles_glTexCoord2f (GLfloat s, GLfloat t);
- void jwzgles_glTexCoord3fv (const GLfloat *);
- void jwzgles_glTexCoord3f (GLfloat s, GLfloat t, GLfloat r);
- void jwzgles_glTexCoord4fv (const GLfloat *);
- void jwzgles_glTexCoord4f (GLfloat s, GLfloat t, GLfloat r, GLfloat q);
- void jwzgles_glVertex2f (GLfloat x, GLfloat y);
- void jwzgles_glVertex2fv (const GLfloat *);
- void jwzgles_glVertex2i (GLint x, GLint y);
- void jwzgles_glVertex3f (GLfloat x, GLfloat y, GLfloat z);
- void jwzgles_glVertex3dv (const GLdouble *);
- void jwzgles_glVertex3fv (const GLfloat *);
- void jwzgles_glVertex3i (GLint x, GLint y, GLint z);
- void jwzgles_glVertex4f (GLfloat x, GLfloat y, GLfloat z, GLfloat w);
- void jwzgles_glVertex4fv (const GLfloat *);
- void jwzgles_glVertex4i (GLint x, GLint y, GLint z, GLint w);
- void jwzgles_glEnd (void);
- void jwzgles_glCallList (int id);
- void jwzgles_glClearIndex(GLfloat c);
- void jwzgles_glBitmap (GLsizei, GLsizei, GLfloat, GLfloat, GLfloat,
-                              GLfloat, const GLubyte *);
- void jwzgles_glPushAttrib(int);
- void jwzgles_glPopAttrib(void);
-
-
-/* These functions are present in both OpenGL 1.3 and in OpenGLES 1,
-   but are allowed within glNewList/glEndList, so we must wrap them
-   to allow them to be recorded.
- */
- void jwzgles_glActiveTexture (GLuint);
- void jwzgles_glBindTexture (GLuint, GLuint);
- void jwzgles_glBlendFunc (GLuint, GLuint);
- void jwzgles_glClear (GLuint);
- void jwzgles_glClearColor (GLclampf, GLclampf, GLclampf, GLclampf);
- void jwzgles_glClearStencil (GLuint);
- void jwzgles_glColorMask (GLuint, GLuint, GLuint, GLuint);
- void jwzgles_glCullFace (GLuint);
- void jwzgles_glDepthFunc (GLuint);
- void jwzgles_glDepthMask (GLuint);
- void jwzgles_glDisable (GLuint);
- void jwzgles_glDrawArrays (GLuint, GLuint, GLuint);
- GLboolean jwzgles_glIsEnabled (GLuint);
- void jwzgles_glEnable (GLuint);
- void jwzgles_glFrontFace (GLuint);
- void jwzgles_glHint (GLuint, GLuint);
- void jwzgles_glLineWidth (GLfloat);
- void jwzgles_glLoadIdentity (void);
- void jwzgles_glLogicOp (GLuint);
- void jwzgles_glMatrixMode (GLuint);
- void jwzgles_glMultMatrixf (const GLfloat *);
- void jwzgles_glPointSize (GLfloat);
- void jwzgles_glPolygonOffset (GLfloat, GLfloat);
- void jwzgles_glPopMatrix (void);
- void jwzgles_glPushMatrix (void);
- void jwzgles_glScissor (GLuint, GLuint, GLuint, GLuint);
- void jwzgles_glShadeModel (GLuint);
- void jwzgles_glStencilFunc (GLuint, GLuint, GLuint);
- void jwzgles_glStencilMask (GLuint);
- void jwzgles_glStencilOp (GLuint, GLuint, GLuint);
- void jwzgles_glViewport (GLuint, GLuint, GLuint, GLuint);
- void jwzgles_glTranslatef (GLfloat, GLfloat, GLfloat);
- void jwzgles_glRotatef (GLfloat, GLfloat, GLfloat, GLfloat);
- void jwzgles_glRotated (GLdouble, GLdouble x, GLdouble y, GLdouble z);
- void jwzgles_glScalef (GLfloat, GLfloat, GLfloat);
- void jwzgles_glColor3f (GLfloat, GLfloat, GLfloat);
- void jwzgles_glColor4f (GLfloat, GLfloat, GLfloat, GLfloat);
- void jwzgles_glColor3fv (const GLfloat *);
- void jwzgles_glColor4fv (const GLfloat *);
- void jwzgles_glColor4i (GLuint, GLuint, GLuint, GLuint);
- void jwzgles_glColor3i (GLuint, GLuint, GLuint);
- void jwzgles_glColor3iv (const GLint *);
- void jwzgles_glColor4iv (const GLint *);
- void jwzgles_glColor4ub (GLubyte, GLubyte, GLubyte, GLubyte);
- void jwzgles_glColor3ub (GLubyte, GLubyte, GLubyte);
- void jwzgles_glMaterialf (GLuint, GLuint, GLfloat);
- void jwzgles_glMateriali (GLuint, GLuint, GLuint);
- void jwzgles_glMaterialfv (GLuint, GLuint, const GLfloat *);
- void jwzgles_glMaterialiv (GLuint, GLuint, const GLint *);
- void jwzgles_glFinish (void);
- void jwzgles_glFlush (void);
- void jwzgles_glPixelStorei (GLuint, GLuint);
- void jwzgles_glEnableClientState (GLuint);
- void jwzgles_glDisableClientState (GLuint);
-
- void jwzgles_glInitNames (void);
- void jwzgles_glPushName (GLuint);
- GLuint jwzgles_glPopName (void);
- GLuint jwzgles_glRenderMode (GLuint);
- void jwzgles_glSelectBuffer (GLsizei, GLuint *);
- void jwzgles_glLightf (GLenum, GLenum, GLfloat);
- void jwzgles_glLighti (GLenum, GLenum, GLint);
- void jwzgles_glLightfv (GLenum, GLenum, const GLfloat *);
- void jwzgles_glLightiv (GLenum, GLenum, const GLint *);
- void jwzgles_glLightModelf (GLenum, GLfloat);
- void jwzgles_glLightModeli (GLenum, GLint);
- void jwzgles_glLightModelfv (GLenum, const GLfloat *);
- void jwzgles_glLightModeliv (GLenum, const GLint *);
- void jwzgles_glGenTextures (GLuint, GLuint *);
- void jwzgles_glFrustum (GLfloat, GLfloat, GLfloat, GLfloat,
-                               GLfloat, GLfloat);
- void jwzgles_glOrtho (GLfloat, GLfloat, GLfloat, GLfloat, 
-                             GLfloat, GLfloat);
- void jwzgles_glTexImage1D (GLenum target, GLint level,
-                                  GLint internalFormat,
-                                  GLsizei width, GLint border,
-                                  GLenum format, GLenum type,
-                                  const GLvoid *pixels);
- void jwzgles_glTexImage2D (GLenum target,
-                                  GLint  	level,
-                                  GLint  	internalFormat,
-                                  GLsizei  	width,
-                                  GLsizei  	height,
-                                  GLint  	border,
-                                  GLenum  	format,
-                                  GLenum  	type,
-                                  const GLvoid *data);
- void jwzgles_glTexSubImage2D (GLenum target, GLint level,
-                                     GLint xoffset, GLint yoffset,
-                                     GLsizei width, GLsizei height,
-                                     GLenum format, GLenum type,
-                                     const GLvoid *pixels);
- void jwzgles_glCopyTexImage2D (GLenum target, GLint level, 
-                                      GLenum internalformat,
-                                      GLint x, GLint y, 
-                                      GLsizei width, GLsizei height, 
-                                      GLint border);
- void jwzgles_glInterleavedArrays (GLenum, GLsizei, const GLvoid *);
- void jwzgles_glTexEnvf (GLuint, GLuint, GLfloat);
- void jwzgles_glTexEnvi (GLuint, GLuint, GLuint);
- void jwzgles_glTexParameterf (GLuint, GLuint, GLfloat);
- void jwzgles_glTexParameteri (GLuint, GLuint, GLuint);
- void jwzgles_glTexGeni (GLenum, GLenum, GLint);
- void jwzgles_glTexGenfv (GLenum, GLenum, const GLfloat *);
- void jwzgles_glRectf (GLfloat, GLfloat, GLfloat, GLfloat);
- void jwzgles_glRecti (GLint, GLint, GLint, GLint);
- void jwzgles_glLightModelfv (GLenum, const GLfloat *);
- void jwzgles_glClearDepth (GLfloat);
- GLboolean jwzgles_glIsList (GLuint);
- void jwzgles_glColorMaterial (GLenum, GLenum);
- void jwzgles_glPolygonMode (GLenum, GLenum);
- void jwzgles_glFogf (GLenum, GLfloat);
- void jwzgles_glFogi (GLenum, GLint);
- void jwzgles_glFogfv (GLenum, const GLfloat *);
- void jwzgles_glFogiv (GLenum, const GLint *);
- void jwzgles_glAlphaFunc (GLenum, GLfloat);
- void jwzgles_glClipPlane (GLenum, const GLdouble *);
- void jwzgles_glDrawBuffer (GLenum);
- void jwzgles_glDeleteTextures (GLuint, const GLuint *);
-
- void jwzgles_gluPerspective (GLdouble fovy, GLdouble aspect, 
-                                    GLdouble near, GLdouble far);
- void jwzgles_gluLookAt (GLfloat eyex, GLfloat eyey, GLfloat eyez,
-                               GLfloat centerx, GLfloat centery, 
-                               GLfloat centerz,
-                               GLfloat upx, GLfloat upy, GLfloat upz);
- GLint jwzgles_gluProject (GLdouble objx, GLdouble objy, GLdouble objz, 
-                                 const GLdouble modelMatrix[16], 
-                                 const GLdouble projMatrix[16],
-                                 const GLint viewport[4],
-                                 GLdouble *winx, GLdouble *winy, 
-                                 GLdouble *winz);
- int jwzgles_gluBuild2DMipmaps (GLenum target,
+    /* Prototypes for the things re-implemented in jwzgles.c
+     */
+    
+    extern int  jwzgles_glGenLists (int n);
+    extern void jwzgles_glNewList (int id, int mode);
+    extern void jwzgles_glEndList (void);
+    extern void jwzgles_glDeleteLists (int list, int range);
+    extern void jwzgles_glBegin (int mode);
+    extern void jwzgles_glNormal3fv (const GLfloat *);
+    extern void jwzgles_glNormal3f (GLfloat x, GLfloat y, GLfloat z);
+    extern void jwzgles_glTexCoord1f (GLfloat s);
+    extern void jwzgles_glTexCoord2fv (const GLfloat *);
+    extern void jwzgles_glTexCoord2f (GLfloat s, GLfloat t);
+    extern void jwzgles_glTexCoord3fv (const GLfloat *);
+    extern void jwzgles_glTexCoord3f (GLfloat s, GLfloat t, GLfloat r);
+    extern void jwzgles_glTexCoord4fv (const GLfloat *);
+    extern void jwzgles_glTexCoord4f (GLfloat s, GLfloat t, GLfloat r, GLfloat q);
+    extern void jwzgles_glVertex2f (GLfloat x, GLfloat y);
+    extern void jwzgles_glVertex2fv (const GLfloat *);
+    extern void jwzgles_glVertex2i (GLint x, GLint y);
+    extern void jwzgles_glVertex3f (GLfloat x, GLfloat y, GLfloat z);
+    extern void jwzgles_glVertex3dv (const GLdouble *);
+    extern void jwzgles_glVertex3fv (const GLfloat *);
+    extern void jwzgles_glVertex3i (GLint x, GLint y, GLint z);
+    extern void jwzgles_glVertex4f (GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+    extern void jwzgles_glVertex4fv (const GLfloat *);
+    extern void jwzgles_glVertex4i (GLint x, GLint y, GLint z, GLint w);
+    extern void jwzgles_glEnd (void);
+    extern void jwzgles_glCallList (int id);
+    extern void jwzgles_glClearIndex(GLfloat c);
+    extern void jwzgles_glBitmap (GLsizei, GLsizei, GLfloat, GLfloat, GLfloat,
+                                  GLfloat, const GLubyte *);
+    extern void jwzgles_glPushAttrib(int);
+    extern void jwzgles_glPopAttrib(void);
+    
+    
+    /* These functions are present in both OpenGL 1.3 and in OpenGLES 1,
+     but are allowed within glNewList/glEndList, so we must wrap them
+     to allow them to be recorded.
+     */
+    extern void jwzgles_glActiveTexture (GLuint);
+    extern void jwzgles_glBindTexture (GLuint, GLuint);
+    extern void jwzgles_glBlendFunc (GLuint, GLuint);
+    extern void jwzgles_glClear (GLuint);
+    extern void jwzgles_glClearColor (GLclampf, GLclampf, GLclampf, GLclampf);
+    extern void jwzgles_glClearStencil (GLuint);
+    extern void jwzgles_glColorMask (GLuint, GLuint, GLuint, GLuint);
+    extern void jwzgles_glCullFace (GLuint);
+    extern void jwzgles_glDepthFunc (GLuint);
+    extern void jwzgles_glDepthMask (GLuint);
+    extern void jwzgles_glDisable (GLuint);
+    extern void jwzgles_glDrawArrays (GLuint, GLuint, GLuint);
+    extern GLboolean jwzgles_glIsEnabled (GLuint);
+    extern void jwzgles_glEnable (GLuint);
+    extern void jwzgles_glFrontFace (GLuint);
+    extern void jwzgles_glHint (GLuint, GLuint);
+    extern void jwzgles_glLineWidth (GLfloat);
+    extern void jwzgles_glLoadIdentity (void);
+    extern void jwzgles_glLogicOp (GLuint);
+    extern void jwzgles_glMatrixMode (GLuint);
+    extern void jwzgles_glMultMatrixf (const GLfloat *);
+    extern void jwzgles_glPointSize (GLfloat);
+    extern void jwzgles_glPolygonOffset (GLfloat, GLfloat);
+    extern void jwzgles_glPopMatrix (void);
+    extern void jwzgles_glPushMatrix (void);
+    extern void jwzgles_glScissor (GLuint, GLuint, GLuint, GLuint);
+    extern void jwzgles_glShadeModel (GLuint);
+    extern void jwzgles_glStencilFunc (GLuint, GLuint, GLuint);
+    extern void jwzgles_glStencilMask (GLuint);
+    extern void jwzgles_glStencilOp (GLuint, GLuint, GLuint);
+    extern void jwzgles_glViewport (GLuint, GLuint, GLuint, GLuint);
+    extern void jwzgles_glTranslatef (GLfloat, GLfloat, GLfloat);
+    extern void jwzgles_glRotatef (GLfloat, GLfloat, GLfloat, GLfloat);
+    extern void jwzgles_glRotated (GLdouble, GLdouble x, GLdouble y, GLdouble z);
+    extern void jwzgles_glScalef (GLfloat, GLfloat, GLfloat);
+    extern void jwzgles_glColor3f (GLfloat, GLfloat, GLfloat);
+    extern void jwzgles_glColor4f (GLfloat, GLfloat, GLfloat, GLfloat);
+    extern void jwzgles_glColor3fv (const GLfloat *);
+    extern void jwzgles_glColor4fv (const GLfloat *);
+    extern void jwzgles_glColor4i (GLuint, GLuint, GLuint, GLuint);
+    extern void jwzgles_glColor3i (GLuint, GLuint, GLuint);
+    extern void jwzgles_glColor3iv (const GLint *);
+    extern void jwzgles_glColor4iv (const GLint *);
+    extern void jwzgles_glColor4ub (GLubyte, GLubyte, GLubyte, GLubyte);
+    extern void jwzgles_glColor3ub (GLubyte, GLubyte, GLubyte);
+    extern void jwzgles_glMaterialf (GLuint, GLuint, GLfloat);
+    extern void jwzgles_glMateriali (GLuint, GLuint, GLuint);
+    extern void jwzgles_glMaterialfv (GLuint, GLuint, const GLfloat *);
+    extern void jwzgles_glMaterialiv (GLuint, GLuint, const GLint *);
+    extern void jwzgles_glFinish (void);
+    extern void jwzgles_glFlush (void);
+    extern void jwzgles_glPixelStorei (GLuint, GLuint);
+    extern void jwzgles_glEnableClientState (GLuint);
+    extern void jwzgles_glDisableClientState (GLuint);
+    
+    extern void jwzgles_glInitNames (void);
+    extern void jwzgles_glPushName (GLuint);
+    extern GLuint jwzgles_glPopName (void);
+    extern GLuint jwzgles_glRenderMode (GLuint);
+    extern void jwzgles_glSelectBuffer (GLsizei, GLuint *);
+    extern void jwzgles_glLightf (GLenum, GLenum, GLfloat);
+    extern void jwzgles_glLighti (GLenum, GLenum, GLint);
+    extern void jwzgles_glLightfv (GLenum, GLenum, const GLfloat *);
+    extern void jwzgles_glLightiv (GLenum, GLenum, const GLint *);
+    extern void jwzgles_glLightModelf (GLenum, GLfloat);
+    extern void jwzgles_glLightModeli (GLenum, GLint);
+    extern void jwzgles_glLightModelfv (GLenum, const GLfloat *);
+    extern void jwzgles_glLightModeliv (GLenum, const GLint *);
+    extern void jwzgles_glGenTextures (GLuint, GLuint *);
+    extern void jwzgles_glFrustum (GLfloat, GLfloat, GLfloat, GLfloat,
+                                   GLfloat, GLfloat);
+    extern void jwzgles_glOrtho (GLfloat, GLfloat, GLfloat, GLfloat,
+                                 GLfloat, GLfloat);
+    extern void jwzgles_glTexImage1D (GLenum target, GLint level,
                                       GLint internalFormat,
-                                      GLsizei width,
-                                      GLsizei height,
-                                      GLenum format,
-                                      GLenum type,
+                                      GLsizei width, GLint border,
+                                      GLenum format, GLenum type,
+                                      const GLvoid *pixels);
+    extern void jwzgles_glTexImage2D (GLenum target,
+                                      GLint  	level,
+                                      GLint  	internalFormat,
+                                      GLsizei  	width,
+                                      GLsizei  	height,
+                                      GLint  	border,
+                                      GLenum  	format,
+                                      GLenum  	type,
                                       const GLvoid *data);
- void jwzgles_glGetFloatv (GLenum pname, GLfloat *params);
- void jwzgles_glGetPointerv (GLenum pname, GLvoid *params);
- void jwzgles_glGetDoublev (GLenum pname, GLdouble *params);
- void jwzgles_glGetIntegerv (GLenum pname, GLint *params);
- void jwzgles_glGetBooleanv (GLenum pname, GLboolean *params);
- void jwzgles_glVertexPointer (GLuint, GLuint, GLuint, const void *);
- void jwzgles_glNormalPointer (GLenum, GLuint, const void *);
- void jwzgles_glColorPointer (GLuint, GLuint, GLuint, const void *);
- void jwzgles_glTexCoordPointer (GLuint, GLuint, GLuint, const void *);
- void jwzgles_glBindBuffer (GLuint, GLuint);
- void jwzgles_glBufferData (GLenum, GLsizeiptr, const void *, GLenum);
- const char *jwzgles_gluErrorString (GLenum error);
+    extern void jwzgles_glTexSubImage2D (GLenum target, GLint level,
+                                         GLint xoffset, GLint yoffset,
+                                         GLsizei width, GLsizei height,
+                                         GLenum format, GLenum type,
+                                         const GLvoid *pixels);
+    extern void jwzgles_glCopyTexImage2D (GLenum target, GLint level,
+                                          GLenum internalformat,
+                                          GLint x, GLint y,
+                                          GLsizei width, GLsizei height,
+                                          GLint border);
+    extern void jwzgles_glInterleavedArrays (GLenum, GLsizei, const GLvoid *);
+    extern void jwzgles_glTexEnvf (GLuint, GLuint, GLfloat);
+    extern void jwzgles_glTexEnvi (GLuint, GLuint, GLuint);
+    extern void jwzgles_glTexParameterf (GLuint, GLuint, GLfloat);
+    extern void jwzgles_glTexParameteri (GLuint, GLuint, GLuint);
+    extern void jwzgles_glTexGeni (GLenum, GLenum, GLint);
+    extern void jwzgles_glTexGenfv (GLenum, GLenum, const GLfloat *);
+    extern void jwzgles_glRectf (GLfloat, GLfloat, GLfloat, GLfloat);
+    extern void jwzgles_glRecti (GLint, GLint, GLint, GLint);
+    extern void jwzgles_glLightModelfv (GLenum, const GLfloat *);
+    extern void jwzgles_glClearDepth (GLfloat);
+    extern GLboolean jwzgles_glIsList (GLuint);
+    extern void jwzgles_glColorMaterial (GLenum, GLenum);
+    extern void jwzgles_glPolygonMode (GLenum, GLenum);
+    extern void jwzgles_glFogf (GLenum, GLfloat);
+    extern void jwzgles_glFogi (GLenum, GLint);
+    extern void jwzgles_glFogfv (GLenum, const GLfloat *);
+    extern void jwzgles_glFogiv (GLenum, const GLint *);
+    extern void jwzgles_glAlphaFunc (GLenum, GLfloat);
+    extern void jwzgles_glClipPlane (GLenum, const GLdouble *);
+    extern void jwzgles_glDrawBuffer (GLenum);
+    extern void jwzgles_glDeleteTextures (GLuint, const GLuint *);
+    
+    extern void jwzgles_gluPerspective (GLdouble fovy, GLdouble aspect,
+                                        GLdouble near, GLdouble far);
+    extern void jwzgles_gluLookAt (GLfloat eyex, GLfloat eyey, GLfloat eyez,
+                                   GLfloat centerx, GLfloat centery,
+                                   GLfloat centerz,
+                                   GLfloat upx, GLfloat upy, GLfloat upz);
+    extern GLint jwzgles_gluProject (GLdouble objx, GLdouble objy, GLdouble objz,
+                                     const GLdouble modelMatrix[16],
+                                     const GLdouble projMatrix[16],
+                                     const GLint viewport[4],
+                                     GLdouble *winx, GLdouble *winy,
+                                     GLdouble *winz);
+    extern int jwzgles_gluBuild2DMipmaps (GLenum target,
+                                          GLint internalFormat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLenum format,
+                                          GLenum type,
+                                          const GLvoid *data);
+    extern void jwzgles_glGetFloatv (GLenum pname, GLfloat *params);
+    extern void jwzgles_glGetPointerv (GLenum pname, GLvoid *params);
+    extern void jwzgles_glGetDoublev (GLenum pname, GLdouble *params);
+    extern void jwzgles_glGetIntegerv (GLenum pname, GLint *params);
+    extern void jwzgles_glGetBooleanv (GLenum pname, GLboolean *params);
+    extern void jwzgles_glVertexPointer (GLuint, GLuint, GLuint, const void *);
+    extern void jwzgles_glNormalPointer (GLenum, GLuint, const void *);
+    extern void jwzgles_glColorPointer (GLuint, GLuint, GLuint, const void *);
+    extern void jwzgles_glTexCoordPointer (GLuint, GLuint, GLuint, const void *);
+    extern void jwzgles_glBindBuffer (GLuint, GLuint);
+    extern void jwzgles_glBufferData (GLenum, GLsizeiptr, const void *, GLenum);
+    extern const char *jwzgles_gluErrorString (GLenum error);
 
 #ifdef __cplusplus
 }

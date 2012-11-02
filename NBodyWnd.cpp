@@ -147,6 +147,15 @@ void NBodyWnd::Render()
 
   if (m_flags & dspSTAT)
     DrawStat();
+    
+  if (m_flags & dspDUST)
+    DrawDust();
+    
+  if (m_flags & dspH2)
+    DrawH2();
+    
+  if (m_flags & dspSTARS)
+    DrawStars();
 
 #if TARGET_OS_IPHONE==0
   if (m_flags & dspAXIS)
@@ -154,15 +163,6 @@ void NBodyWnd::Render()
     
   if (m_flags & dspDENSITY_WAVES)
     DrawDensityWaves(50, m_galaxy.GetFarFieldRad());
-    
-  if (m_flags & dspDUST)
-    DrawDust();
-
-  if (m_flags & dspH2)
-    DrawH2();
-
-  if (m_flags & dspSTARS)
-    DrawStars();
 
   if (m_flags & dspRADII)
     DrawGalaxyRadii();
@@ -177,7 +177,6 @@ void NBodyWnd::Render()
   SDL_GL_SwapWindow(window);// Swap on-screen/off-screen buffers (double buffering)
 }
 
-#if TARGET_OS_IPHONE==0
 void NBodyWnd::DrawEllipse(double a, double b, double angle)
 {
   const int steps = 100;
@@ -204,7 +203,6 @@ void NBodyWnd::DrawEllipse(double a, double b, double angle)
    }
    glEnd();
 }
-#endif
 
 
 #if TARGET_OS_IPHONE==0
@@ -279,7 +277,6 @@ void NBodyWnd::DrawDensityWaves(int num, double rad)
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawStars()
 {
-#if debug_on_osx==0
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
   float maxSize = 0.0f;
@@ -321,13 +318,11 @@ void NBodyWnd::DrawStars()
   glDisable(GL_POINT_SPRITE_ARB);
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
-#endif
 }
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawDust()
 {
-#if debug_on_osx==0
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
   float maxSize = 0.0f;
@@ -363,13 +358,11 @@ void NBodyWnd::DrawDust()
   glDisable(GL_POINT_SPRITE_ARB);
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_BLEND);    
-#endif
 }
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawH2()
 {
-#if debug_on_osx==0
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
   float maxSize = 0.0f;
@@ -423,7 +416,6 @@ void NBodyWnd::DrawH2()
   glDisable(GL_POINT_SPRITE_ARB);
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_BLEND);
-#endif
 }
 
 //------------------------------------------------------------------------------
@@ -511,10 +503,10 @@ void NBodyWnd::DrawHelp()
   TextOut(x0, y0 + dy * line++, "Display features");
   TextOut(x0, y0 + dy * line++, "  F1    - Help screen");
   TextOut(x0, y0 + dy * line++, "  F2    - Galaxy data");
-#if TARGET_OS_IPHONE==0
   TextOut(x0, y0 + dy * line++, "  F3    - renders stars in white");
   TextOut(x0, y0 + dy * line++, "  F4    - turns off dust");
   TextOut(x0, y0 + dy * line++, "  F5    - turns off H2 regions");
+#if TARGET_OS_IPHONE==0
   TextOut(x0, y0 + dy * line++, "  F6    - Density waves (Star orbits)");
   TextOut(x0, y0 + dy * line++, "  F7    - Axis");
   TextOut(x0, y0 + dy * line++, "  F8    - Radii");
@@ -623,7 +615,6 @@ void NBodyWnd::OnProcessEvents(SDL_Event &e)
                 m_flags &= ~dspHELP;
                 break;
 
-#if TARGET_OS_IPHONE==0
           case  SDLK_F3:
                 std::cout << "Display:  Toggling stars " << ((m_flags & dspSTARS) ? "off" : "on") << "\n";
                 if (m_starRenderType==2)
@@ -647,6 +638,8 @@ void NBodyWnd::OnProcessEvents(SDL_Event &e)
                 std::cout << "Display:  Toggling h2 regions " << ((m_flags & dspH2) ? "off" : "on") << "\n";
                 m_flags ^= dspH2;
                 break;
+                
+#if TARGET_OS_IPHONE==0
                 
           case SDLK_F6:
                 std::cout << "Display:  Density waves axis " << ((m_flags & dspDENSITY_WAVES) ? "off" : "on") << "\n";

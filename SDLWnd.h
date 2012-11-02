@@ -3,51 +3,15 @@
 
 #include <string>
 
-#ifdef __APPLE__
-#include "TargetConditionals.h"
-
-#if TARGET_OS_IPHONE==1
-#include <OpenGLES/ES1/gl.h> // include ES 1.1, we don't need ES2
-#include <OpenGLES/ES1/glext.h>
 extern "C" {
 #include "jwzglesI.h"
 }
 #include "jwzgles.h"
-#define GL_POINT_SIZE_MAX_ARB                              0x8127
-#define GL_POINT_SIZE_MIN_ARB                              0x8126
-#define GL_POINT_SPRITE_ARB                                0x8861
-#define GL_POINT_SPRITE_ARB                                0x8861
-#define GL_COORD_REPLACE_ARB                               0x8862
-
-#define GL_POINT_SPRITE GL_POINT_SPRITE_OES
-
-#elif TARGET_OS_MAC==1
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <OpenGL/glext.h>
-
-#else
-#error "Unsupported Apple platform (only OS X and iPhone are supported out of the box)"
-#endif
-
-#else
-#error "Replace this line with #define linux, and prepare to do minor adjustments"
-#endif
-
-#ifdef linux
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
-#include <GL/glx.h>
-#endif
 
 #include "SDL.h"
 #include "SDL_opengl.h" 
 
 #include "Vector.h"
-
-// leaving out features that would be harder to port to GLES:
-#define debug_on_osx 0
 
 /** \brief Basic infrastructure for grafical output using SDL/OpenGL */
 class SDLWindow
@@ -125,7 +89,7 @@ protected:
     SDL_Window* window;
     GLuint m_texStar;
     
-#if defined linux || TARGET_OS_IPHONE==1    // function pointer for point sprite extension
+#if defined linux || TARGET_OS_IPHONE==1    // function pointer for point sprite extension ...... FIXME FIXME FIXME
     typedef void(* 	PFNGLPOINTPARAMETERFARBPROC )(GLenum pname, GLfloat param);
     typedef void(* 	PFNGLPOINTPARAMETERFEXTPROC )(GLenum pname, GLfloat param);
     PFNGLPOINTPARAMETERFARBPROC  glPointParameterfARB;

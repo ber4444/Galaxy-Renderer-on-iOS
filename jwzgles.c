@@ -142,18 +142,6 @@
 
 */
 
-
-#undef DEBUG
-
-
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif /* HAVE_CONFIG_H */
-
-#ifdef HAVE_JWZGLES	/* whole file */
-
-#define USE_IPHONE
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -162,20 +150,6 @@
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-
-#if defined(USE_IPHONE)
-# include <OpenGLES/ES1/gl.h>
-# include <OpenGLES/ES1/glext.h>
-#elif defined(HAVE_COCOA)
-# include <OpenGL/gl.h>
-# include <OpenGL/glu.h>
-#else /* X11 */
-# ifndef  GL_GLEXT_PROTOTYPES
-#  define GL_GLEXT_PROTOTYPES /* for glBindBuffer */
-# endif
-# include <GL/glx.h>
-# include <GL/glu.h>
-#endif
 
 #include "jwzglesI.h"
 
@@ -186,7 +160,7 @@
 
 #undef  Assert
 
-#ifdef HAVE_COCOA
+#ifdef THIS_IS_UNUSED_FOR_NOW
   extern void jwxyz_abort (const char *fmt, ...) __dead2;
 # define Assert(C,S) do { if (!(C)) { jwxyz_abort ("%s",S); }} while(0)
 #else
@@ -3806,4 +3780,3 @@ WRAP (glViewport,	IIII)
 WRAP (glDeleteTextures,	IIV)
 
 
-#endif /* HAVE_JWZGLES - whole file */
