@@ -176,10 +176,9 @@ void SDLWindow::InitPointSpriteExtension()
 #ifdef linux
         // http://www.idevgames.com/forums/thread-2634-post-48095.html
         glPointParameterfARB  = (PFNGLPOINTPARAMETERFEXTPROC)SDL_GL_GetProcAddress("glPointParameterfARB");
-        glPointParameterfvARB = (PFNGLPOINTPARAMETERFVEXTPROC)SDL_GL_GetProcAddress("glPointParameterfvARB");
 #endif
-        if( !glPointParameterfARB || !glPointParameterfvARB )
-            throw std::runtime_error("One or more GL_EXT_point_parameters functions were not found");
+        if( !glPointParameterfARB )
+            throw std::runtime_error("GL_EXT_point_parameters function not found");
     }
     else
         throw std::runtime_error("GL_ARB_point_parameters extension is not present");
@@ -280,6 +279,7 @@ void SDLWindow::SaveToTGA(int idx)
 
 void SDLWindow::SaveToTGA(const std::string &sName)
 {
+#if TARGET_OS_IPHONE==0
     using std::ios;
     
     int nSize = GetWidth() * GetHeight() * 3;
@@ -324,6 +324,7 @@ void SDLWindow::SaveToTGA(const std::string &sName)
     
     file.write(reinterpret_cast<char*>(pixels), nSize);
     file.close();
+#endif
 }
 
 void SDLWindow::ScaleAxis(double scale)
@@ -385,9 +386,9 @@ int SDLWindow::GetFPS() const
 }
 
 #if TARGET_OS_IPHONE==0
+// note that this is not part of the galaxy simulation so no real need to port to GLES
 void SDLWindow::DrawAxis(const Vec2D &origin)
 {
-#if debug_on_osx==0
     glColor3f(0.3, 0.3, 0.3);
     
     double s = std::pow(10, (int)(log10(m_fov/2))),
@@ -434,7 +435,6 @@ void SDLWindow::DrawAxis(const Vec2D &origin)
     glEnd();
     
     glPopMatrix();
-#endif
 }
 #endif
 

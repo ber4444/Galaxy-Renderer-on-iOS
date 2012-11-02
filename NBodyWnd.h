@@ -49,10 +49,10 @@ private:
     
     NBodyWnd(const NBodyWnd& orig);
     
-#if TARGET_OS_IPHONE==0
     void DrawStars();
     void DrawDust();
     void DrawH2();
+#if TARGET_OS_IPHONE==0
     void DrawGalaxyRadii();
     void DrawDensityWaves(int num, double rad);
     void DrawVelocity();
@@ -60,7 +60,9 @@ private:
     void DrawStat();
     void DrawHelp();
     void DrawCenterOfMass();
+#if TARGET_OS_IPHONE==0
     void DrawEllipse(double a, double b, double angle);
+#endif
     Color ColorFromTemperature(double temp) const;
     
     int m_camOrient;    ///< Index of the camera orientation to use

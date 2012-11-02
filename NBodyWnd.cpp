@@ -177,31 +177,9 @@ void NBodyWnd::Render()
   SDL_GL_SwapWindow(window);// Swap on-screen/off-screen buffers (double buffering)
 }
 
-#if TARGET_OS_IPHONE==1
-void NBodyWnd::DrawEllipse(double a, double b, double angle){
-    /* TODO: it's something like:
-    GLfloat xradius = 0.25;
-    GLfloat yradius = 0.5;
-    
-    GLfloat point[2];
-    
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(2, GL_FLOAT, 0, point);
-    glPointSize(2.0);
-    
-    for (float angle = 0; angle < 2*M_PI; angle += 0.1) {
-        glPushMatrix();
-        point[0] = cos(angle)*xradius;
-        point[1] = sin(angle)*yradius;
-        glTranslatef(point[0], point[1], 0.0);
-        glDrawArrays(GL_POINTS, 0, 1);
-        glPopMatrix();
-    }*/
-}
-#else
+#if TARGET_OS_IPHONE==0
 void NBodyWnd::DrawEllipse(double a, double b, double angle)
 {
-#if debug_on_osx==0
   const int steps = 100;
   const double x = 0;
   const double y = 0;
@@ -225,16 +203,15 @@ void NBodyWnd::DrawEllipse(double a, double b, double angle)
     glVertex3f(X, Y, 0);
    }
    glEnd();
-#endif
 }
 #endif
 
 
 #if TARGET_OS_IPHONE==0
+// note that this is not part of the galaxy simulation so no real need to port to GLES
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawVelocity()
 {
-#if debug_on_osx==0
     Star *pStars = m_galaxy.GetStars();
     
     double dt_in_sec = m_galaxy.GetTimeStep() * Constant::SEC_PER_YEAR;
@@ -281,14 +258,12 @@ void NBodyWnd::DrawVelocity()
      }
      glEnd();
      */
-#endif
 }
 
 //------------------------------------------------------------------------------
+// note that this is not part of the galaxy simulation so no real need to port to GLES
 void NBodyWnd::DrawDensityWaves(int num, double rad)
-{
-#if debug_on_osx==0
-    double dr = rad / num;
+{    double dr = rad / num;
     
     for (int i=0; i<=num; ++i)
     {
@@ -298,8 +273,8 @@ void NBodyWnd::DrawDensityWaves(int num, double rad)
                      r * m_galaxy.GetExcentricity(r),
                      Constant::RAD_TO_DEG * m_galaxy.GetAngularOffset(r));
     }
-#endif
 }
+#endif
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawStars()
@@ -387,7 +362,7 @@ void NBodyWnd::DrawDust()
 
   glDisable(GL_POINT_SPRITE_ARB);
   glDisable(GL_TEXTURE_2D);
-  glDisable(GL_BLEND);
+  glDisable(GL_BLEND);    
 #endif
 }
 
@@ -450,7 +425,6 @@ void NBodyWnd::DrawH2()
   glDisable(GL_BLEND);
 #endif
 }
-#endif
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawStat()
@@ -475,9 +449,9 @@ void NBodyWnd::DrawStat()
 }
 
 #if TARGET_OS_IPHONE==0
+// note that this is not part of the galaxy simulation so no real need to port to GLES
 void NBodyWnd::DrawGalaxyRadii()
 {
-#if debug_on_osx==0
   double r;
 
   glColor3f(1, 1, 0);
@@ -500,7 +474,6 @@ void NBodyWnd::DrawGalaxyRadii()
   DrawEllipse(r, r, 0);
   glRasterPos2f(0, r+500);
   TextOut("Intergalactic medium");
-#endif
 }
 #endif
 

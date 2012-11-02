@@ -7,14 +7,19 @@
 #include "TargetConditionals.h"
 
 #if TARGET_OS_IPHONE==1
-#import <OpenGLES/ES1/gl.h> // include ES 1.1, we don't need ES2
-#import "glu.h"
-#import <OpenGLES/ES1/glext.h>
+#include <OpenGLES/ES1/gl.h> // include ES 1.1, we don't need ES2
+#include <OpenGLES/ES1/glext.h>
+extern "C" {
+#include "jwzglesI.h"
+}
+#include "jwzgles.h"
+#define GL_POINT_SIZE_MAX_ARB                              0x8127
+#define GL_POINT_SIZE_MIN_ARB                              0x8126
+#define GL_POINT_SPRITE_ARB                                0x8861
+#define GL_POINT_SPRITE_ARB                                0x8861
+#define GL_COORD_REPLACE_ARB                               0x8862
+
 #define GL_POINT_SPRITE GL_POINT_SPRITE_OES
-#define GLdouble     GLfloat
-#define glClearDepth glClearDepthf
-#define glOrtho      glOrthof
-#define glFrustum    glFrustumf
 
 #elif TARGET_OS_MAC==1
 #include <OpenGL/gl.h>
@@ -42,7 +47,7 @@
 #include "Vector.h"
 
 // leaving out features that would be harder to port to GLES:
-#define debug_on_osx 1
+#define debug_on_osx 0
 
 /** \brief Basic infrastructure for grafical output using SDL/OpenGL */
 class SDLWindow
@@ -120,10 +125,10 @@ protected:
     SDL_Window* window;
     GLuint m_texStar;
     
-#ifdef linux
-    // function pointer for point sprite extension
+#if defined linux || TARGET_OS_IPHONE==1    // function pointer for point sprite extension
+    typedef void(* 	PFNGLPOINTPARAMETERFARBPROC )(GLenum pname, GLfloat param);
+    typedef void(* 	PFNGLPOINTPARAMETERFEXTPROC )(GLenum pname, GLfloat param);
     PFNGLPOINTPARAMETERFARBPROC  glPointParameterfARB;
-    PFNGLPOINTPARAMETERFVARBPROC glPointParameterfvARB;
 #endif
     
     volatile bool m_bRunning;
