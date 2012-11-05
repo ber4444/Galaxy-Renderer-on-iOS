@@ -3,10 +3,36 @@
 
 #include <string>
 
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+
+#if TARGET_OS_IPHONE==1
 extern "C" {
 #include "jwzglesI.h"
 }
 #include "jwzgles.h"
+#elif TARGET_OS_MAC==1
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <OpenGL/glext.h>
+#else
+#error "Unsupported Apple platform (only OS X and iPhone are supported out of the box)"
+#endif
+
+#else /* ifdef __APPLE__ */
+#error "Replace this line with #define linux, and prepare to do minor adjustments"
+#endif
+
+#ifdef linux
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glext.h>
+#include <GL/glx.h>
+# ifndef  GL_GLEXT_PROTOTYPES
+#  define GL_GLEXT_PROTOTYPES /* for glBindBuffer */
+# endif
+#endif
+
 
 #include "SDL.h"
 #include "SDL_opengl.h" 
@@ -89,18 +115,12 @@ protected:
     SDL_Window* window;
     GLuint m_texStar;
     
-#if defined linux || TARGET_OS_IPHONE==1    // function pointer for point sprite extension ...... FIXME FIXME FIXME
-    typedef void(* 	PFNGLPOINTPARAMETERFARBPROC )(GLenum pname, GLfloat param);
-    typedef void(* 	PFNGLPOINTPARAMETERFEXTPROC )(GLenum pname, GLfloat param);
-    PFNGLPOINTPARAMETERFARBPROC  glPointParameterfARB;
-#endif
-    
     volatile bool m_bRunning;
     
 private:
     
     void InitGL();
-    void InitPointSpriteExtension();
+    void TextureLoading();
 };
 
 #endif

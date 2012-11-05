@@ -17,43 +17,11 @@
 #ifndef __JWZGLES_I_H__
 #define __JWZGLES_I_H__
 
-#ifdef __APPLE__
-#include "TargetConditionals.h"
-
 #if TARGET_OS_IPHONE==1
+
 #include <OpenGLES/ES1/gl.h> // include ES 1.1, we don't need ES2
 #include <OpenGLES/ES1/glext.h>
 #define GL_POINT_SPRITE GL_POINT_SPRITE_OES
-#define GL_GLEXT_PROTOTYPES
-#ifndef GL_ARB_point_parameters
-#define GL_POINT_SIZE_MIN_ARB                0x8126
-#define GL_POINT_SIZE_MAX_ARB                0x8127
-#define GL_POINT_FADE_THRESHOLD_SIZE_ARB     0x8128
-#define GL_POINT_DISTANCE_ATTENUATION_ARB    0x8129
-#endif
-
-#elif TARGET_OS_MAC==1
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <OpenGL/glext.h>
-
-#else
-#error "Unsupported Apple platform (only OS X and iPhone are supported out of the box)"
-#endif
-
-#else
-#error "Replace this line with #define linux, and prepare to do minor adjustments"
-#endif
-
-#ifdef linux
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
-#include <GL/glx.h>
-# ifndef  GL_GLEXT_PROTOTYPES
-#  define GL_GLEXT_PROTOTYPES /* for glBindBuffer */
-# endif
-#endif
 
 #ifdef GL_VERSION_ES_CM_1_0  /* compiling against OpenGLES 1.x */
 
@@ -354,5 +322,7 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* if TARGET_OS_IPHONE==1 */
 
 #endif /* __JWZGLES_I_H__ */

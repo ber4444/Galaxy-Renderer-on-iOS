@@ -166,26 +166,8 @@ SDLWindow::~SDLWindow()
     SDL_Quit();
 }
 
-void SDLWindow::InitPointSpriteExtension() //////////////// FIXME FIXME FIXME
+void SDLWindow::TextureLoading() 
 {
-
-    
-#if TARGET_OS_IPHONE==0
-    const char *ext = (const char*)glGetString(GL_EXTENSIONS);
-    
-    if (strstr( ext, "GL_ARB_point_parameters" ))
-    {
-#ifdef linux
-        // http://www.idevgames.com/forums/thread-2634-post-48095.html
-        glPointParameterfARB  = (PFNGLPOINTPARAMETERFEXTPROC)SDL_GL_GetProcAddress("glPointParameterfARB");
-#endif
-        if( !glPointParameterfARB )
-            throw std::runtime_error("GL_EXT_point_parameters function not found");
-    }
-    else
-        throw std::runtime_error("GL_ARB_point_parameters extension is not present");
-#endif
-        
     // texture loading taken from:
     // http://gpwiki.org/index.php/SDL:Tutorials:Using_SDL_with_OpenGL
     SDL_Surface *tex = SDL_LoadBMP("particle.bmp");
@@ -264,7 +246,7 @@ void SDLWindow::InitGL()	        // We call this right after our OpenGL window i
     glViewport(0, 0, GetWidth(), GetHeight());
     
     // SDLWindow::InitFont(); //////////////////// TODO
-    InitPointSpriteExtension();
+    TextureLoading();
 }
 
 void SDLWindow::SaveToTGA(int idx)

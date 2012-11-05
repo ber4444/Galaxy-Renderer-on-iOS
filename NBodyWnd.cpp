@@ -281,8 +281,6 @@ void NBodyWnd::DrawStars()
 
   float maxSize = 0.0f;
   glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
-  glPointParameterfARB(GL_POINT_SIZE_MAX_ARB, maxSize);
-  glPointParameterfARB(GL_POINT_SIZE_MIN_ARB, 1.0f);
   glTexEnvf(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
 
   glEnable(GL_POINT_SPRITE_ARB);
@@ -327,8 +325,6 @@ void NBodyWnd::DrawDust()
 
   float maxSize = 0.0f;
   glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
-  glPointParameterfARB(GL_POINT_SIZE_MAX_ARB, maxSize);
-  glPointParameterfARB(GL_POINT_SIZE_MIN_ARB, 1.0f);
   glTexEnvf(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
 
   glEnable(GL_POINT_SPRITE_ARB);
@@ -367,8 +363,6 @@ void NBodyWnd::DrawH2()
 
   float maxSize = 0.0f;
   glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
-  glPointParameterfARB(GL_POINT_SIZE_MAX_ARB, maxSize);
-  glPointParameterfARB(GL_POINT_SIZE_MIN_ARB, 1.0f);
   glTexEnvf(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
 
   glEnable(GL_POINT_SPRITE_ARB);
