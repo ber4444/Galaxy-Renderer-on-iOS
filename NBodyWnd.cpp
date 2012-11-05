@@ -279,8 +279,6 @@ void NBodyWnd::DrawStars()
 {
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
-  float maxSize = 0.0f;
-  glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
   glTexEnvf(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
 
   glEnable(GL_POINT_SPRITE_ARB);
@@ -323,8 +321,6 @@ void NBodyWnd::DrawDust()
 {
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
-  float maxSize = 0.0f;
-  glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
   glTexEnvf(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
 
   glEnable(GL_POINT_SPRITE_ARB);
@@ -332,11 +328,9 @@ void NBodyWnd::DrawDust()
   glEnable(GL_BLEND);            // soft blending of point sprites
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-
   Star *pDust = m_galaxy.GetDust();
   int num = m_galaxy.GetNumDust();
 
-  glPointSize(maxSize); //*(double)rand()/(double)RAND_MAX);
   glBegin(GL_POINTS);
 
   for (int i=0; i<num; ++i)
@@ -361,8 +355,6 @@ void NBodyWnd::DrawH2()
 {
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
-  float maxSize = 0.0f;
-  glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
   glTexEnvf(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
 
   glEnable(GL_POINT_SPRITE_ARB);
@@ -373,9 +365,6 @@ void NBodyWnd::DrawH2()
 
   Star *pH2 = m_galaxy.GetH2();
   int num = m_galaxy.GetNumH2();
-
-  glPointSize(maxSize); //*(double)rand()/(double)RAND_MAX);
-
 
   for (int i=0; i<num; ++i)
   {
