@@ -17,11 +17,8 @@
 #ifndef __JWZGLES_I_H__
 #define __JWZGLES_I_H__
 
-#if TARGET_OS_IPHONE==1
-
 #include <OpenGLES/ES1/gl.h> // include ES 1.1, we don't need ES2
 #include <OpenGLES/ES1/glext.h>
-#define GL_POINT_SPRITE GL_POINT_SPRITE_OES
 
 #ifdef GL_VERSION_ES_CM_1_0  /* compiling against OpenGLES 1.x */
 
@@ -322,7 +319,5 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* if TARGET_OS_IPHONE==1 */
 
 #endif /* __JWZGLES_I_H__ */

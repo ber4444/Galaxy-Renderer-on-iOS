@@ -81,7 +81,7 @@ void NBodyWnd::Init()
   glLineWidth (1);
 
   glClear(GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_POINT_SPRITE);
+  glEnable(GL_POINT_SPRITE_OES);
   glDisable(GL_DEPTH_TEST);
   glClearColor(0.0f, 0.0f, 0.03f, 0.0f);  // black background
   SetCameraOrientation(Vec3D(0, 1, 0));
@@ -280,10 +280,9 @@ void NBodyWnd::DrawStars()
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
   float maxSize = 0.0f;
-  glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
-  glTexEnvf(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
+  glTexEnvf(GL_POINT_SPRITE_OES, GL_COORD_REPLACE_OES, GL_TRUE);
 
-  glEnable(GL_POINT_SPRITE_ARB);
+  glEnable(GL_POINT_SPRITE_OES);
   glEnable(GL_TEXTURE_2D);       // point sprite texture support
   glEnable(GL_BLEND);            // soft blending of point sprites
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -313,7 +312,7 @@ void NBodyWnd::DrawStars()
   }
   glEnd();
 
-  glDisable(GL_POINT_SPRITE_ARB);
+  glDisable(GL_POINT_SPRITE_OES);
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
 }
@@ -324,10 +323,9 @@ void NBodyWnd::DrawDust()
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
   float maxSize = 0.0f;
-  glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
-  glTexEnvf(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
+  glTexEnvf(GL_POINT_SPRITE_OES, GL_COORD_REPLACE_OES, GL_TRUE);
 
-  glEnable(GL_POINT_SPRITE_ARB);
+  glEnable(GL_POINT_SPRITE_OES);
   glEnable(GL_TEXTURE_2D);       // point sprite texture support
   glEnable(GL_BLEND);            // soft blending of point sprites
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -351,7 +349,7 @@ void NBodyWnd::DrawDust()
   }
   glEnd();
 
-  glDisable(GL_POINT_SPRITE_ARB);
+  glDisable(GL_POINT_SPRITE_OES);
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_BLEND);    
 }
@@ -362,10 +360,9 @@ void NBodyWnd::DrawH2()
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
   float maxSize = 0.0f;
-  glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
-  glTexEnvf(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
+  glTexEnvf(GL_POINT_SPRITE_OES, GL_COORD_REPLACE_OES, GL_TRUE);
 
-  glEnable(GL_POINT_SPRITE_ARB);
+  glEnable(GL_POINT_SPRITE_OES);
   glEnable(GL_TEXTURE_2D);       // point sprite texture support
   glEnable(GL_BLEND);            // soft blending of point sprites
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -407,7 +404,7 @@ void NBodyWnd::DrawH2()
   }
 
 
-  glDisable(GL_POINT_SPRITE_ARB);
+  glDisable(GL_POINT_SPRITE_OES);
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_BLEND);
 }
