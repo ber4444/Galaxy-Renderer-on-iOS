@@ -40,7 +40,11 @@ extern "C" {
 
 
 #include "SDL.h"
-#include "SDL_opengl.h" 
+#if TARGET_OS_IPHONE==1
+#include "SDL_opengles.h"
+#else
+#include "SDL_opengl.h"
+#endif
 
 #include "Vector.h"
 
