@@ -12,6 +12,7 @@
 // static functions / variables
 GLuint SDLWindow::s_fontBase = 0;
 
+// FIXME: implement iOS-specific font methods
 void SDLWindow::InitFont()
 {
     Display *dpy;          /* Our current X display */
@@ -190,7 +191,7 @@ void SDLWindow::TextureLoading()
 #if TARGET_OS_IPHONE==0
         if ( tex->format->Rmask == 0x000000ff)
 #endif
-            texture_format = GL_BGRA;//GL_RGBA;
+            texture_format = GL_RGBA;
         // FIXME: not sure about this, maybe it should in fact be GL_BGRA and not GL_RGBA for iOS
 #if TARGET_OS_IPHONE==0
         else
@@ -353,9 +354,11 @@ void SDLWindow::AdjustCamera()
     
     double l = m_fov/2.0;
     glOrtho(-l, l, -l, l, -l, l);
+#ifndef USING_REGAL_OPENGL
     gluLookAt(m_camPos.x, m_camPos.y, m_camPos.z,
               m_camLookAt.x, m_camLookAt.y, m_camLookAt.z,
               m_camOrient.x, m_camOrient.y, m_camOrient.z);
+#endif
     glMatrixMode(GL_MODELVIEW);
 }
 

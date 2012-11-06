@@ -279,7 +279,6 @@ void NBodyWnd::DrawStars()
 {
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
-  float maxSize = 0.0f;
   glTexEnvf(GL_POINT_SPRITE_OES, GL_COORD_REPLACE_OES, GL_TRUE);
 
   glEnable(GL_POINT_SPRITE_OES);
@@ -287,10 +286,8 @@ void NBodyWnd::DrawStars()
   glEnable(GL_BLEND);            // soft blending of point sprites
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-
   int num = m_galaxy.GetNumStars();
   Star *pStars = m_galaxy.GetStars();
-
 
   glPointSize(4); //pStars[i].m_mag*10);
   glBegin(GL_POINTS);
@@ -330,7 +327,6 @@ void NBodyWnd::DrawDust()
   glEnable(GL_BLEND);            // soft blending of point sprites
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-
   Star *pDust = m_galaxy.GetDust();
   int num = m_galaxy.GetNumDust();
 
@@ -367,12 +363,10 @@ void NBodyWnd::DrawH2()
   glEnable(GL_BLEND);            // soft blending of point sprites
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-
   Star *pH2 = m_galaxy.GetH2();
   int num = m_galaxy.GetNumH2();
 
   glPointSize(maxSize); //*(double)rand()/(double)RAND_MAX);
-
 
   for (int i=0; i<num; ++i)
   {
@@ -402,7 +396,6 @@ void NBodyWnd::DrawH2()
       glVertex3f(p1.x, p1.y, 0.0f);
     glEnd();
   }
-
 
   glDisable(GL_POINT_SPRITE_OES);
   glDisable(GL_TEXTURE_2D);

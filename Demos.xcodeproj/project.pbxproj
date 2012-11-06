@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E3E19E41649656D0072115F /* jwzgles.c in Sources */ = {isa = PBXBuildFile; fileRef = 5E3E19E31649656D0072115F /* jwzgles.c */; };
 		5E5465FD162EB0D000BB086B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF0D7220E12D31800247964 /* AudioToolbox.framework */; };
 		5E546600162EB14D00BB086B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB96EDF0DEFC9DC00FAF19F /* QuartzCore.framework */; };
 		5E546601162EB15800BB086B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
-		5EAA762B1643DB2400BD902A /* jwzgles.c in Sources */ = {isa = PBXBuildFile; fileRef = 5EAA762A1643DB2400BD902A /* jwzgles.c */; };
 		5ED03E881641736D00BC3F9C /* Vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFD2507163AAF7700F21C0A /* Vector.cpp */; };
 		5ED03E8A1641737A00BC3F9C /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFD2509163AAF7700F21C0A /* Types.cpp */; };
 		5EE9A1F4163FE49700746670 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FD787AA00E22A5CC003E8E36 /* Default.png */; };
@@ -35,9 +35,7 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		5E96E6031642DA1F004B6CD9 /* jwzgles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jwzgles.h; sourceTree = "<group>"; };
-		5E96E6041642DA1F004B6CD9 /* jwzglesI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jwzglesI.h; sourceTree = "<group>"; };
-		5EAA762A1643DB2400BD902A /* jwzgles.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jwzgles.c; sourceTree = "<group>"; };
+		5E3E19E31649656D0072115F /* jwzgles.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = jwzgles.c; sourceTree = "<group>"; };
 		5EE5953A163ADF79007DD637 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5EE9A1EC163FD96800746670 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5EEA505316401569002E4E6E /* libSDL2-arm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libSDL2-arm.a"; sourceTree = "<group>"; };
@@ -103,9 +101,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				5EAA762A1643DB2400BD902A /* jwzgles.c */,
-				5E96E6031642DA1F004B6CD9 /* jwzgles.h */,
-				5E96E6041642DA1F004B6CD9 /* jwzglesI.h */,
+				5E3E19E31649656D0072115F /* jwzgles.c */,
 				5EEA505516401570002E4E6E /* libSDL2-x86.a */,
 				5EEA505316401569002E4E6E /* libSDL2-arm.a */,
 				5EE5953A163ADF79007DD637 /* Info.plist */,
@@ -229,6 +225,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E3E19E41649656D0072115F /* jwzgles.c in Sources */,
 				5ED03E8A1641737A00BC3F9C /* Types.cpp in Sources */,
 				5ED03E881641736D00BC3F9C /* Vector.cpp in Sources */,
 				5EFD2524163AAF7700F21C0A /* specrend.cpp in Sources */,
@@ -239,7 +236,6 @@
 				5EFD252C163AAF7700F21C0A /* Galaxy.cpp in Sources */,
 				5EFD252D163AAF7700F21C0A /* FastMath.cpp in Sources */,
 				5EFD252E163AAF7700F21C0A /* CumulativeDistributionFunction.cpp in Sources */,
-				5EAA762B1643DB2400BD902A /* jwzgles.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,7 +289,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Seung Joo Yang (SWBWSYNT48)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
-				HEADER_SEARCH_PATHS = include/;
+				HEADER_SEARCH_PATHS = "include/**";
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -321,7 +317,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Seung Joo Yang (SWBWSYNT48)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Seung Joo Yang (SWBWSYNT48)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				HEADER_SEARCH_PATHS = include/;
+				HEADER_SEARCH_PATHS = "include/**";
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (

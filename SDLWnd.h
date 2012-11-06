@@ -11,10 +11,15 @@ extern "C" {
 #include "jwzglesI.h"
 }
 #include "jwzgles.h"
+//#include "GL/Regal.h"
+//#include "GL/RegalGLU.h"
+//#define USING_REGAL_OPENGL
 #elif TARGET_OS_MAC==1
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <OpenGL/glext.h>
+#define GL_POINT_SPRITE_OES GL_POINT_SPRITE
+#define GL_COORD_REPLACE_OES GL_COORD_REPLACE_ARB
 #else
 #error "Unsupported Apple platform (only OS X and iPhone are supported out of the box)"
 #endif

@@ -298,6 +298,7 @@
 		5E8AEA071624177900D85825 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_WARN_EMPTY_BODY = NO;
 				COMBINE_HIDPI_IMAGES = NO;
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = /Library/Frameworks;
@@ -306,8 +307,12 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				"HEADER_SEARCH_PATHS[arch=*]" = /Library/Frameworks/SDL2.framework/Headers;
 				INFOPLIST_FILE = "$(SRCROOT)/demo-Info.plist";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/include/**";
 				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = app;
 			};
@@ -316,14 +321,19 @@
 		5E8AEA081624177900D85825 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_WARN_EMPTY_BODY = NO;
 				COMBINE_HIDPI_IMAGES = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "demo-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/demo-Info.plist";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/include/**";
 				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = app;
 			};
