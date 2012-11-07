@@ -5,7 +5,7 @@ It's also a cross-platform app development test using C++, OpenGL ES and SDL2 (t
 Topics on SO: http://stackoverflow.com/questions/12896730/gravity-driven-fluid-dynamics-computation and http://gamedev.stackexchange.com/questions/40249/sdl2-with-opengl-weird-results-whats-wrong
 
 And here is a link to another similar project: http://www.youtube.com/watch?v=CbN5PBmvu_0, which is based on this simpler algorithm: http://www.openprocessing.org/sketch/700
-
+(notice that Processing is in the App Store now, so you can run the script on iPhone directly -- what you see on the youtube link, that is, porting to Objective C is unnecessary)
 ---------------------------------------------------------------------------------------
 
   ________       .__                        
