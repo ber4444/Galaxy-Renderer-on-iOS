@@ -139,24 +139,28 @@ SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &c
 ,m_texStar(0)
 ,m_bRunning(true)
 {
-
+    SDL_GLContext ctx;
+    
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
         throw std::runtime_error(SDL_GetError());
     atexit(SDL_Quit);
     
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 0 );
-    SDL_GL_SetAttribute( SDL_GL_RETAINED_BACKING, 1 ); 
+    SDL_GL_SetAttribute( SDL_GL_RETAINED_BACKING, 1 );
     
-    if ((window = SDL_CreateWindow(caption.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                   width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS)) == NULL)
-        throw std::runtime_error(SDL_GetError());     
-    
-    if ((surface = SDL_GetWindowSurface(window)) == NULL)
+    if ((window = SDL_CreateWindow(caption.c_str(), SDL_WINDOWPOS_CENTERED,
+                                   SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN |
+                                   SDL_WINDOW_BORDERLESS)) == NULL)
         throw std::runtime_error(SDL_GetError());
+    
+    /*if ((surface = SDL_GetWindowSurface(window)) == NULL)
+     throw std::runtime_error(SDL_GetError());*/
     
     m_width = width;
     m_height = height;
+    
+    ctx = SDL_GL_CreateContext(window);
     
     InitGL();
 }
