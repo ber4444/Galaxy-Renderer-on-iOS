@@ -11,6 +11,7 @@
 		5E5465FD162EB0D000BB086B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF0D7220E12D31800247964 /* AudioToolbox.framework */; };
 		5E546600162EB14D00BB086B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB96EDF0DEFC9DC00FAF19F /* QuartzCore.framework */; };
 		5E546601162EB15800BB086B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
+		5EA5D133165134E800F8026A /* VersionCheck.c in Sources */ = {isa = PBXBuildFile; fileRef = 5EA5D132165134E800F8026A /* VersionCheck.c */; };
 		5ED03E881641736D00BC3F9C /* Vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFD2507163AAF7700F21C0A /* Vector.cpp */; };
 		5ED03E8A1641737A00BC3F9C /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFD2509163AAF7700F21C0A /* Types.cpp */; };
 		5EE9A1F4163FE49700746670 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FD787AA00E22A5CC003E8E36 /* Default.png */; };
@@ -36,6 +37,7 @@
 		1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5E3E19E31649656D0072115F /* jwzgles.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = jwzgles.c; sourceTree = "<group>"; };
+		5EA5D132165134E800F8026A /* VersionCheck.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = VersionCheck.c; sourceTree = "<group>"; };
 		5EE5953A163ADF79007DD637 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5EE9A1EC163FD96800746670 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5EEA505316401569002E4E6E /* libSDL2-arm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libSDL2-arm.a"; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				5EFD251D163AAF7700F21C0A /* CumulativeDistributionFunction.h */,
 				5EFD251E163AAF7700F21C0A /* CumulativeDistributionFunction.cpp */,
 				5EFD251F163AAF7700F21C0A /* Constants.h */,
+				5EA5D132165134E800F8026A /* VersionCheck.c */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -236,6 +239,7 @@
 				5EFD252C163AAF7700F21C0A /* Galaxy.cpp in Sources */,
 				5EFD252D163AAF7700F21C0A /* FastMath.cpp in Sources */,
 				5EFD252E163AAF7700F21C0A /* CumulativeDistributionFunction.cpp in Sources */,
+				5EA5D133165134E800F8026A /* VersionCheck.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,9 +293,9 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Seung Joo Yang (SWBWSYNT48)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
-				HEADER_SEARCH_PATHS = "include/**";
+				HEADER_SEARCH_PATHS = include/;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					.,
@@ -317,9 +321,9 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Seung Joo Yang (SWBWSYNT48)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Seung Joo Yang (SWBWSYNT48)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				HEADER_SEARCH_PATHS = "include/**";
+				HEADER_SEARCH_PATHS = include/;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					.,

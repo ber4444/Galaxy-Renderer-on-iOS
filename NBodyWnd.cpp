@@ -19,8 +19,8 @@
 
 
 //------------------------------------------------------------------------------
-NBodyWnd::NBodyWnd(int sz, std::string caption)
-  :SDLWindow(sz, sz, 35000.0, caption)
+NBodyWnd::NBodyWnd(int width, int height, std::string caption)
+:SDLWindow(width, height, 35000.0, caption)
   ,m_camOrient(0)
   ,m_starRenderType(1)
   ,m_flags(dspSTARS | dspAXIS | dspHELP | dspDUST | dspH2)
@@ -316,10 +316,10 @@ void NBodyWnd::DrawStars()
 
 //------------------------------------------------------------------------------
 void NBodyWnd::DrawDust()
-{
+{    
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
-  float maxSize = 0.0f;
+
   glTexEnvf(GL_POINT_SPRITE_OES, GL_COORD_REPLACE_OES, GL_TRUE);
 
   glEnable(GL_POINT_SPRITE_OES);
@@ -330,7 +330,7 @@ void NBodyWnd::DrawDust()
   Star *pDust = m_galaxy.GetDust();
   int num = m_galaxy.GetNumDust();
 
-  glPointSize(maxSize); //*(double)rand()/(double)RAND_MAX);
+  glPointSize(max_size); //*(double)rand()/(double)RAND_MAX);
   glBegin(GL_POINTS);
 
   for (int i=0; i<num; ++i)
@@ -433,23 +433,15 @@ void NBodyWnd::DrawGalaxyRadii()
   glColor3f(1, 1, 0);
   r = m_galaxy.GetCoreRad();
   if (r>0)
-  {
     DrawEllipse(r, r, 0);
-    glRasterPos2f(0, r+500);
-    TextOut("Core");
-  }
 
   glColor3f(0, 1, 0);
   r = m_galaxy.GetRad();
   DrawEllipse(r, r, 0);
-  glRasterPos2f(0, r+500);
-  TextOut("Disk");
 
   glColor3f(1, 0, 0);
   r = m_galaxy.GetFarFieldRad();
   DrawEllipse(r, r, 0);
-  glRasterPos2f(0, r+500);
-  TextOut("Intergalactic medium");
 }
 #endif
 
@@ -476,11 +468,13 @@ void NBodyWnd::DrawHelp()
   TextOut(x0, y0 + dy * line++, "  w     - increase outer excentricity");
   TextOut(x0, y0 + dy * line++, "  s     - decrease outer excentricity");
   TextOut(x0, y0 + dy * line++, "  e     - increase angular shift of orbits");
-  TextOut(x0, y0 + dy * line++, "  d     - decrease angular shift of orbits");
+  TextOut(x0, y0 + dy * line++, "  d     - decrease angular shift of orbits"); // Allows negative angular offsets to revers the spiral arm direction. - TODO: add touch control
   TextOut(x0, y0 + dy * line++, "  r     - increase core size");
   TextOut(x0, y0 + dy * line++, "  f     - decrease core size");
   TextOut(x0, y0 + dy * line++, "  t     - increase galaxy size");
-  TextOut(x0, y0 + dy * line++, "  g     - decrease galaxy size");
+  TextOut(x0, y0 + dy * line++, "  g     - decrease galaxy size");    
+  TextOut(x0, y0 + dy * line++, "  y     - increase the speed of the stars at the edge of the galaxy"); // TODO: add touch control
+  TextOut(x0, y0 + dy * line++, "  h     - decrease the speed of the stars at the edge of the galaxy");
 #if TARGET_OS_IPHONE==0
   TextOut(x0, y0 + dy * line++, "  p     - velocity graph");
 #endif
@@ -576,7 +570,6 @@ void NBodyWnd::OnProcessEvents(SDL_Event &e)
                 m_galaxy.SetRad(std::max(m_galaxy.GetRad()-1000, 0.0));
                 break;
 
-                /////////// undocumented:
           case SDLK_z:
           case SDLK_y:
                 m_galaxy.SetSigma(m_galaxy.GetSigma()+0.05);
@@ -585,7 +578,6 @@ void NBodyWnd::OnProcessEvents(SDL_Event &e)
           case SDLK_h:
                 m_galaxy.SetSigma(std::max(m_galaxy.GetSigma()-0.05, 0.05));
                 break;
-                /////////////////////////////
                 
           case  SDLK_F1:
                 std::cout << "Display:  help screen" << ((m_flags & dspHELP) ? "off" : "on") << "\n";

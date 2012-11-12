@@ -11,9 +11,7 @@ extern "C" {
 #include "jwzglesI.h"
 }
 #include "jwzgles.h"
-//#include "GL/Regal.h"
-//#include "GL/RegalGLU.h"
-//#define USING_REGAL_OPENGL
+
 #elif TARGET_OS_MAC==1
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -95,24 +93,14 @@ protected:
     double GetFOV() const;
     SDL_Surface *Surface();
     
-#ifdef linux
-    static void InitFont();
-    static void KillFont();
-    static void TextOut(const char *fmt, ...);
     static void TextOut(int x, int y, const char *fmt, ...);
-    static Vec3D GetOGLPos(int x, int y);
-    
-    static GLuint s_fontBase;
-#else
-    static void TextOut(const char *fmt, ...) {};
-    static void TextOut(int x, int y, const char *fmt, ...) {};
-#endif
     
 protected:
     
     double m_fov;  ///< Length of an axis
     int m_width;       ///< Width of the window in pixel
     int m_height;      ///< Height of the window in pixel
+    float max_size;    ///< for dust clouds
     int m_fps;
     int m_idxSnapshot;
     

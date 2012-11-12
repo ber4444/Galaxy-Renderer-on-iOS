@@ -7,124 +7,24 @@
 #include <fstream>
 #include <ctime>
 #include <cmath>
-
-#ifdef linux
-// static functions / variables
-GLuint SDLWindow::s_fontBase = 0;
-
-// FIXME: implement iOS-specific font methods
-void SDLWindow::InitFont()
-{
-    Display *dpy;          /* Our current X display */
-    XFontStruct *fontInfo; /* Our font info */
-    
-    /* Storage for 96 characters */
-    s_fontBase = glGenLists(96); // note that OpenGL ES does not support display lists: http://pandorawiki.org/Porting_to_GLES_from_GL#Display_Lists
-    
-    /* Get our current display long enough to get the fonts */
-    dpy = XOpenDisplay(NULL);
-    
-    /* Get the font information */
-    fontInfo = XLoadQueryFont(dpy, "-adobe-helvetica-medium-r-normal--18-*-*-*-p-*-iso8859-1" );
-    
-    /* If the above font didn't exist try one that should */
-    if (fontInfo == NULL)
-    {
-        fontInfo = XLoadQueryFont(dpy, "fixed");
-        
-        /* If that font doesn't exist, something is wrong */
-        if (fontInfo == NULL)
-            throw std::runtime_error("no X font available?");
-    }
-    
-    /* generate the list */
-    glXUseXFont( fontInfo->fid, 32, 96, s_fontBase);
-    
-    /* Recover some memory */
-    XFreeFont(dpy, fontInfo);
-    
-    /* close the display now that we're done with it */
-    XCloseDisplay(dpy);
-}
-
-void SDLWindow::KillFont()
-{
-    glDeleteLists(s_fontBase, 96);
-}
-
-/* Print our GL text to the screen */
-void SDLWindow::TextOut(const char *fmt, ...)
-{
-    char text[256]; /* Holds our string */
-    va_list ap;     /* Pointer to our list of elements */
-    
-    /* If there's no text, do nothing */
-    if (fmt == NULL)
-        return;
-    
-    /* Parses The String For Variables */
-    va_start( ap, fmt );
-    
-    /* Converts Symbols To Actual Numbers */
-    vsprintf( text, fmt, ap );
-    va_end(ap);
-    
-    glPushAttrib(GL_LIST_BIT);     // Pushes the Display List Bits
-    glListBase(s_fontBase - 32);   // Sets base character to 32
-    glCallLists((int)strlen(text), GL_UNSIGNED_BYTE, text); // Draws the text
-    glPopAttrib();                 // Pops the Display List Bits
-}
+using namespace std;
 
 void SDLWindow::TextOut(int x, int y, const char *fmt, ...)
 {
-    Vec3D p = GetOGLPos(x, y);
-    glRasterPos2f(p.x, p.y);
-    
+#ifdef VERY_SLOW_DEBUG_CODE
     char text[256]; /* Holds our string */
     va_list ap;     /* Pointer to our list of elements */
     
-    /* If there's no text, do nothing */
     if (fmt == NULL)
         return;
     
-    /* Parses The String For Variables */
     va_start( ap, fmt );
-    
-    /* Converts Symbols To Actual Numbers */
     vsprintf( text, fmt, ap );
     va_end(ap);
     
-    glPushAttrib(GL_LIST_BIT);     // Pushes the Display List Bits
-    glListBase(s_fontBase - 32);   // Sets base character to 32
-    glCallLists((int)strlen(text), GL_UNSIGNED_BYTE, text); // Draws the text
-    glPopAttrib();                 // Pops the Display List Bits
-}
-
-/** \brief get opengl position from a screen position
- 
- see also:  http://nehe.gamedev.net/data/articles/article.asp?article=13
- */
-Vec3D SDLWindow::GetOGLPos(int x, int y)
-{
-    GLint viewport[4];
-    GLdouble modelview[16];
-    GLdouble projection[16];
-    GLfloat winX, winY, winZ;
-    GLdouble posX, posY, posZ;
-    
-    glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
-    glGetDoublev( GL_PROJECTION_MATRIX, projection );
-    glGetIntegerv( GL_VIEWPORT, viewport );
-    
-    winX = (float)x;
-    winY = (float)viewport[3] - (float)y;
-    glReadPixels( x, int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
-    
-    gluUnProject( winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
-    
-    return Vec3D(posX, posY, posZ);
-}
+    std::cout << text;
 #endif
+}
 
 SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &caption)
 :m_fov(axisLen)
@@ -154,11 +54,14 @@ SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &c
                                    SDL_WINDOW_BORDERLESS)) == NULL)
         throw std::runtime_error(SDL_GetError());
     
-    /*if ((surface = SDL_GetWindowSurface(window)) == NULL)
-     throw std::runtime_error(SDL_GetError());*/
-    
     m_width = width;
     m_height = height;
+    if(m_width == 480)
+        max_size = 50.0f;
+    else if (m_height == 480)
+        max_size = 25.0f;
+    else
+        max_size = 50.0f;
     
     ctx = SDL_GL_CreateContext(window);
     
@@ -167,7 +70,6 @@ SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &c
 
 SDLWindow::~SDLWindow()
 {
-    //KillFont(); /////////////////// TODO
     SDL_Quit();
 }
 
@@ -196,7 +98,6 @@ void SDLWindow::TextureLoading()
         if ( tex->format->Rmask == 0x000000ff)
 #endif
             texture_format = GL_RGBA;
-        // FIXME: not sure about this, maybe it should in fact be GL_BGRA and not GL_RGBA for iOS
 #if TARGET_OS_IPHONE==0
         else
             texture_format = GL_BGRA;
@@ -248,9 +149,12 @@ void SDLWindow::InitGL()	        // We call this right after our OpenGL window i
 {
     glShadeModel(GL_SMOOTH);
     glClearColor(0.0f, 0.0f, 0.1f, 0.0f);  // black background
-    glViewport(0, 0, GetWidth(), GetHeight());
-    
-    // SDLWindow::InitFont(); //////////////////// TODO
+#if TARGET_OS_IPHONE==0
+    glViewport(0, 0, GetWidth(), GetWidth());
+#else
+    glViewport(0, (GetHeight() - GetWidth())/2, GetWidth(), GetWidth());
+#endif
+
     TextureLoading();
 }
 
@@ -358,11 +262,9 @@ void SDLWindow::AdjustCamera()
     
     double l = m_fov/2.0;
     glOrtho(-l, l, -l, l, -l, l);
-#ifndef USING_REGAL_OPENGL
     gluLookAt(m_camPos.x, m_camPos.y, m_camPos.z,
               m_camLookAt.x, m_camLookAt.y, m_camLookAt.z,
               m_camOrient.x, m_camOrient.y, m_camOrient.z);
-#endif
     glMatrixMode(GL_MODELVIEW);
 }
 
@@ -393,7 +295,7 @@ void SDLWindow::DrawAxis(const Vec2D &origin)
     {
         p += s;
         
-        if (i%2==0)
+        /* if (i%2==0)
         {
             glRasterPos2f(p-l, -4*l);
             TextOut("%2.0f", p);
@@ -402,7 +304,7 @@ void SDLWindow::DrawAxis(const Vec2D &origin)
         {
             glRasterPos2f(p-l, 2*l);
             TextOut("%2.0f", p);
-        }
+        } */
         
         glBegin(GL_LINES);
         glVertex3f(p, -l, 0);

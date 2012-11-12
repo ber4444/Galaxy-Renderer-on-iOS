@@ -12,7 +12,7 @@ class NBodyWnd : public SDLWindow
 {
 public:
     
-    NBodyWnd(int sz, std::string caption);
+    NBodyWnd(int width, int height, std::string caption);
     virtual ~NBodyWnd();
     
     virtual void Render();
