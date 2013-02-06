@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E40B1A31656949600207CA9 /* VersionCheck.c in Sources */ = {isa = PBXBuildFile; fileRef = 5E40B1A21656949600207CA9 /* VersionCheck.c */; };
 		5E546604162EB53500BB086B /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E546603162EB53500BB086B /* SDL2.framework */; };
 		5E8AE9ED1624177800D85825 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E8AE9EC1624177800D85825 /* Cocoa.framework */; };
 		5E8AEA0C162417C000D85825 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E8AEA0B162417C000D85825 /* OpenGL.framework */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5E40B1A21656949600207CA9 /* VersionCheck.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VersionCheck.c; sourceTree = "<group>"; };
 		5E546603162EB53500BB086B /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		5E8AE9E81624177800D85825 /* demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E8AE9EC1624177800D85825 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -116,6 +118,7 @@
 		5E8AE9F21624177800D85825 = {
 			isa = PBXGroup;
 			children = (
+				5E40B1A21656949600207CA9 /* VersionCheck.c */,
 				5E8AEA0E1624186E00D85825 /* SDLMain.mm */,
 				5E8AEA0F1624186E00D85825 /* specrend.cpp */,
 				5E8AEA101624186E00D85825 /* SDLMain.nib */,
@@ -217,6 +220,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E40B1A31656949600207CA9 /* VersionCheck.c in Sources */,
 				5E8AEA231624186E00D85825 /* SDLMain.mm in Sources */,
 				5E8AEA241624186E00D85825 /* specrend.cpp in Sources */,
 				5E8AEA261624186E00D85825 /* Vector.cpp in Sources */,

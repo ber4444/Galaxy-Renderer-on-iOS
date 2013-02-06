@@ -289,8 +289,8 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Seung Joo Yang (SWBWSYNT48)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Seung Joo Yang (SWBWSYNT48)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: kwanghoon ahn (FMZ7ECMZX8)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: kwanghoon ahn (FMZ7ECMZX8)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				HEADER_SEARCH_PATHS = include/;
@@ -304,8 +304,8 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "E38F2C07-743E-41F2-A64F-7111ADD648EE";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E38F2C07-743E-41F2-A64F-7111ADD648EE";
+				PROVISIONING_PROFILE = "6A080769-5569-485B-BA5A-2A728FA2E558";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6A080769-5569-485B-BA5A-2A728FA2E558";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 i386";
@@ -318,8 +318,8 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Seung Joo Yang (SWBWSYNT48)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Seung Joo Yang (SWBWSYNT48)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: kwanghoon ahn (FMZ7ECMZX8)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: kwanghoon ahn (FMZ7ECMZX8)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				HEADER_SEARCH_PATHS = include/;
 				INFOPLIST_FILE = Info.plist;
@@ -332,8 +332,8 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "E38F2C07-743E-41F2-A64F-7111ADD648EE";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E38F2C07-743E-41F2-A64F-7111ADD648EE";
+				PROVISIONING_PROFILE = "6A080769-5569-485B-BA5A-2A728FA2E558";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6A080769-5569-485B-BA5A-2A728FA2E558";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 i386";

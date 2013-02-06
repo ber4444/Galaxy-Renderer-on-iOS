@@ -1,9 +1,3 @@
-/*
- * File:   NBodyWnd.cpp
- * Author: user
- *
- * Created on 8. Juli 2009, 21:54
- */
 #include "NBodyWnd.h"
 
 //--- Standard icludes ---------------------------------------------------------
@@ -23,7 +17,7 @@ NBodyWnd::NBodyWnd(int width, int height, std::string caption)
 :SDLWindow(width, height, 35000.0, caption)
   ,m_camOrient(0)
   ,m_starRenderType(1)
-  ,m_flags(dspSTARS | dspAXIS | dspHELP | dspDUST | dspH2)
+  ,m_flags(dspSTARS | dspDUST | dspH2)
   ,m_bDumpImage(false)
   ,m_galaxy()
   ,m_colNum(200)
@@ -68,7 +62,7 @@ void NBodyWnd::Init()
                  0.5,
                  200,      // orbital velocity at the edge of the core
                  300,      // orbital velovity at the edge of the disk
-                 30000);   // total number of stars
+                 5000);   // total number of stars
 
 
   m_roi = m_galaxy.GetFarFieldRad() * 1.3;
@@ -145,8 +139,10 @@ void NBodyWnd::Render()
     m_galaxy.SingleTimeStep(100000); // time in years
   }
 
+#ifdef VERY_SLOW_DEBUG_CODE
   if (m_flags & dspSTAT)
     DrawStat();
+#endif
     
   if (m_flags & dspDUST)
     DrawDust();
@@ -171,8 +167,10 @@ void NBodyWnd::Render()
     DrawVelocity();
 #endif
 
+#ifdef VERY_SLOW_DEBUG_CODE
   if (m_flags & dspHELP)
     DrawHelp();
+#endif
 
   SDL_GL_SwapWindow(window);// Swap on-screen/off-screen buffers (double buffering)
 }
@@ -229,33 +227,6 @@ void NBodyWnd::DrawVelocity()
         glVertex3f(r, v*10, 0.0f);
     }
     glEnd();
-    /*
-     // Draw Mass Distribution
-     glBegin(GL_LINE_STRIP);
-     glColor3f(0.5, 0.5, 0.7);
-     double dh = m_galaxy.GetFarFieldRad()/100.0;
-     for (int i=0; i<100; ++i)
-     {
-     glVertex3f(i*dh, m_galaxy.m_numberByRad[i], 0.0f);
-     }
-     glEnd();
-     
-     // Draw Intensity curve
-     double dh = m_galaxy.GetFarFieldRad()/100.0;
-     glBegin(GL_LINE_STRIP);
-     glColor3f(0.8, 0.5, 0.7);
-     for (int i=0; i<100; ++i)
-     {
-     double r = i*dh / m_galaxy.GetCoreRad();
-     glVertex3f(i*dh, m_galaxy.GetCoreRad() * Intensity(r,
-     1,   // Kernradius (in Kernradien...)
-     1.0, // Maximalintensität
-     1.0, // Skalenlänge, in Kernradien innerhalb der die Hälfte der Scheibenleuchtkraft angesiedelt ist
-     1.0),// Faktor for Kernleuchtkraft
-     0.0f);
-     }
-     glEnd();
-     */
 }
 
 //------------------------------------------------------------------------------
@@ -289,7 +260,7 @@ void NBodyWnd::DrawStars()
   int num = m_galaxy.GetNumStars();
   Star *pStars = m_galaxy.GetStars();
 
-  glPointSize(4); //pStars[i].m_mag*10);
+  glPointSize(3); //pStars[i].m_mag*10);
   glBegin(GL_POINTS);
 
   if (m_starRenderType==2)
@@ -319,7 +290,6 @@ void NBodyWnd::DrawDust()
 {    
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
-
   glTexEnvf(GL_POINT_SPRITE_OES, GL_COORD_REPLACE_OES, GL_TRUE);
 
   glEnable(GL_POINT_SPRITE_OES);
@@ -330,7 +300,7 @@ void NBodyWnd::DrawDust()
   Star *pDust = m_galaxy.GetDust();
   int num = m_galaxy.GetNumDust();
 
-  glPointSize(max_size); //*(double)rand()/(double)RAND_MAX);
+  glPointSize(max_size+10.0f); //*(double)rand()/(double)RAND_MAX);
   glBegin(GL_POINTS);
 
   for (int i=0; i<num; ++i)
@@ -355,7 +325,6 @@ void NBodyWnd::DrawH2()
 {
   glBindTexture(GL_TEXTURE_2D, m_texStar);
 
-  float maxSize = 0.0f;
   glTexEnvf(GL_POINT_SPRITE_OES, GL_COORD_REPLACE_OES, GL_TRUE);
 
   glEnable(GL_POINT_SPRITE_OES);
@@ -366,7 +335,7 @@ void NBodyWnd::DrawH2()
   Star *pH2 = m_galaxy.GetH2();
   int num = m_galaxy.GetNumH2();
 
-  glPointSize(maxSize); //*(double)rand()/(double)RAND_MAX);
+  glPointSize(max_size); //*(double)rand()/(double)RAND_MAX);
 
   for (int i=0; i<num; ++i)
   {
@@ -410,9 +379,6 @@ void NBodyWnd::DrawStat()
 
 #if TARGET_OS_IPHONE==0
   glColor3f(1, 1, 1);
-#else
-  glColor4f(1, 1, 1, 1.0f );
-#endif
   TextOut(x0, y0 + dy * line++, "FPS:      %d", GetFPS());
   TextOut(x0, y0 + dy * line++, "Time:     %2.2e y", m_galaxy.GetTime());
   TextOut(x0, y0 + dy * line++, "RadCore:     %d pc", (int)m_galaxy.GetCoreRad());
@@ -422,6 +388,7 @@ void NBodyWnd::DrawStat()
   TextOut(x0, y0 + dy * line++, "ExOuter:     %2.2f", m_galaxy.GetExOuter());
   TextOut(x0, y0 + dy * line++, "Sigma:       %2.2f", m_galaxy.GetSigma());
   TextOut(x0, y0 + dy * line++, "AngOff:      %1.4f deg/pc", m_galaxy.GetAngularOffset());
+#endif
 }
 
 #if TARGET_OS_IPHONE==0
@@ -453,49 +420,45 @@ void NBodyWnd::DrawHelp()
   Vec3D p;
 
 #if TARGET_OS_IPHONE==0
-    glColor3f(1, 1, 1);
-#else
-    glColor4f(1, 1, 1, 1.0f );
-#endif
+  glColor3f(1, 1, 1);
   TextOut(x0, y0 + dy * line++, "Keyboard commands");
   TextOut(x0, y0 + dy * line++, "Camera");
-  TextOut(x0, y0 + dy * line++, "  1     - centric; fixed");
+  TextOut(x0, y0 + dy * line++, "  1     - centric; fixed"); //////////////////
   TextOut(x0, y0 + dy * line++, "  2     - centric; rotating with core speed");
   TextOut(x0, y0 + dy * line++, "  3     - centric; rotating with speed of outer disc");
   TextOut(x0, y0 + dy * line++, "Galaxy geometry");
-  TextOut(x0, y0 + dy * line++, "  q     - increase inner excentricity");
+  TextOut(x0, y0 + dy * line++, "  q     - increase inner excentricity"); /////////// = how much a curve or orbit deviates from circularity
   TextOut(x0, y0 + dy * line++, "  a     - decrease inner excentricity");
   TextOut(x0, y0 + dy * line++, "  w     - increase outer excentricity");
   TextOut(x0, y0 + dy * line++, "  s     - decrease outer excentricity");
   TextOut(x0, y0 + dy * line++, "  e     - increase angular shift of orbits");
-  TextOut(x0, y0 + dy * line++, "  d     - decrease angular shift of orbits"); // Allows negative angular offsets to revers the spiral arm direction. - TODO: add touch control
-  TextOut(x0, y0 + dy * line++, "  r     - increase core size");
+  TextOut(x0, y0 + dy * line++, "  d     - decrease angular shift of orbits"); // Allows negative angular offsets to revers the spiral arm direction.
+            //////////    this one works just need to fine tune the touch control!!!!!!!
+  TextOut(x0, y0 + dy * line++, "  r     - increase core size");///////////////
   TextOut(x0, y0 + dy * line++, "  f     - decrease core size");
-  TextOut(x0, y0 + dy * line++, "  t     - increase galaxy size");
-  TextOut(x0, y0 + dy * line++, "  g     - decrease galaxy size");    
-  TextOut(x0, y0 + dy * line++, "  y     - increase the speed of the stars at the edge of the galaxy"); // TODO: add touch control
+  TextOut(x0, y0 + dy * line++, "  t     - increase galaxy size");////////////
+  TextOut(x0, y0 + dy * line++, "  g     - decrease galaxy size");  
+  TextOut(x0, y0 + dy * line++, "  y     - increase the speed of the stars at the edge of the galaxy");
+            ///////////// doesn't work!!!!!!
   TextOut(x0, y0 + dy * line++, "  h     - decrease the speed of the stars at the edge of the galaxy");
-#if TARGET_OS_IPHONE==0
   TextOut(x0, y0 + dy * line++, "  p     - velocity graph");
-#endif
   TextOut(x0, y0 + dy * line++, "Display features");
   TextOut(x0, y0 + dy * line++, "  F1    - Help screen");
   TextOut(x0, y0 + dy * line++, "  F2    - Galaxy data");
   TextOut(x0, y0 + dy * line++, "  F3    - renders stars in white");
   TextOut(x0, y0 + dy * line++, "  F4    - turns off dust");
   TextOut(x0, y0 + dy * line++, "  F5    - turns off H2 regions");
-#if TARGET_OS_IPHONE==0
   TextOut(x0, y0 + dy * line++, "  F6    - Density waves (Star orbits)");
   TextOut(x0, y0 + dy * line++, "  F7    - Axis");
   TextOut(x0, y0 + dy * line++, "  F8    - Radii");
-#endif
-  TextOut(x0, y0 + dy * line++, "  +     - Zoom in");
+  TextOut(x0, y0 + dy * line++, "  +     - Zoom in");/////////////
   TextOut(x0, y0 + dy * line++, "  -     - Zoom out");
   TextOut(x0, y0 + dy * line++, "Misc");
   TextOut(x0, y0 + dy * line++, "  pause - halt simulation");
   TextOut(x0, y0 + dy * line++, "  F12   - Write frames to TGA");
-  TextOut(x0, y0 + dy * line++, "Predefined Galaxies");
+  TextOut(x0, y0 + dy * line++, "Predefined Galaxies"); ////////////
   TextOut(x0, y0 + dy * line++, "  Keypad 0 - 8" );
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -507,9 +470,23 @@ NBodyWnd::Color NBodyWnd::ColorFromTemperature(double temp) const
   return m_col[idx];
 }
 
+
 //------------------------------------------------------------------------------
 void NBodyWnd::OnProcessEvents(SDL_Event &e)
 {
+    if (e.type == SDL_FINGERDOWN) { 
+        if (m_starRenderType==2)
+        {
+            m_starRenderType=0;
+            m_flags &= ~dspSTARS;
+        }
+        else
+        {
+            m_starRenderType++;
+            m_flags |= dspSTARS;
+        }
+    }
+    
     if (e.type == SDL_KEYDOWN)
         switch (e.key.keysym.sym)
         {

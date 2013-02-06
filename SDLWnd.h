@@ -24,7 +24,13 @@ extern "C" {
 
 #else /* ifdef __APPLE__ */
 #error "Replace this line with #define linux, and prepare to do minor adjustments"
+
+#ifdef SDL_VIDEO_OPENGL_ES2 /* for Android, TODO: add proper ifdef
+Android version of SDL loads libGLESv1_CM.so and imports GL10 (ES 1.0 lib)
+but the manifest enables OpenGL ES 2.0 for some reason */
+#error "You should use version 1 of GLES"
 #endif
+#endif /* ifdef __APPLE__ */
 
 #ifdef linux
 #include <GL/gl.h>
@@ -35,6 +41,7 @@ extern "C" {
 #  define GL_GLEXT_PROTOTYPES /* for glBindBuffer */
 # endif
 #endif
+
 
 
 #include "SDL.h"

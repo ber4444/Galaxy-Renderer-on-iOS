@@ -179,13 +179,13 @@ void Galaxy::InitStars(double sigma)
 
   // Initialize the stars
   CumulativeDistributionFunction cdf;
-  cdf.SetupRealistic(1.0,             // Maximalintensität
+  cdf.SetupRealistic(1.0,             // maximum intensity
                      0.02,            // k (bulge)
-                     m_radGalaxy/3.0, // disc skalenlänge
+                     m_radGalaxy/3.0, // disc scale length
                      m_radCore,       // bulge radius
-                     0,               // start der intensitätskurve
-                     m_radFarField,   // ende der intensitätskurve
-                     1000);           // Anzahl der stützstellen
+                     0,               // start of intensity curve
+                     m_radFarField,   // end of intensity curve
+                     1000);           // number of interpolation points
   for (int i=3; i<m_numStars; ++i)
   {
     // random value between -1 and 1
@@ -510,34 +510,6 @@ const Vec2D& Galaxy::GetStarPos(int idx)
 
   return m_pStars[idx].m_pos; //GetPos();
 }
-
-/*
-//-----------------------------------------------------------------------
-Vec2D Galaxy::GetStarPos(int idx)
-{
-  if (idx>=m_numStars)
-    throw std::runtime_error("index out of bounds.");
-
-  double &a = m_pStars[idx].m_a,
-         &b = m_pStars[idx].m_b,
-         &theta = m_pStars[idx].m_theta;
-  const Vec2D &p = m_pStars[idx].m_center;
-
-//  double beta  = m_angle - m_pStars[idx].m_angle,
-  double beta  = -m_pStars[idx].m_angle,
-         alpha = theta * Constant::DEG_TO_RAD;
-
-  // temporyries to save cpu time
-  double cosalpha = cos(alpha),
-         sinalpha = sin(alpha),
-         cosbeta = cos(beta),
-         sinbeta = sin(beta);
-
-  Vec2D pos(p.x + (a * cosalpha * cosbeta - b * sinalpha * sinbeta),
-            p.y + (a * cosalpha * sinbeta + b * sinalpha * cosbeta));
-  return pos;
-}
-*/
 
 //-----------------------------------------------------------------------
 int Galaxy::GetNumH2() const

@@ -48,6 +48,10 @@ SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &c
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 0 );
     SDL_GL_SetAttribute( SDL_GL_RETAINED_BACKING, 1 );
+    // this is default in SDL 2 now:
+    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles");
     
     if ((window = SDL_CreateWindow(caption.c_str(), SDL_WINDOWPOS_CENTERED,
                                    SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN |
@@ -56,12 +60,10 @@ SDLWindow::SDLWindow(int width, int height, double axisLen, const std::string &c
     
     m_width = width;
     m_height = height;
-    if(m_width == 480)
-        max_size = 50.0f;
-    else if (m_height == 480)
-        max_size = 25.0f;
+    if(m_height >= 960)
+        max_size = 30.0f; // tested on an iPod device and an iPhone simulator
     else
-        max_size = 50.0f;
+        max_size = 25.0f; // pure guessing
     
     ctx = SDL_GL_CreateContext(window);
     
