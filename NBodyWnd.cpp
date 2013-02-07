@@ -15,8 +15,7 @@
 //------------------------------------------------------------------------------
 NBodyWnd::NBodyWnd(int width, int height, std::string caption)
 :SDLWindow(width, height, 35000.0, caption)
-  ,m_camOrient(0)
-  ,m_starRenderType(1)
+  ,m_touchControlSetting(0)
   ,m_flags(dspSTARS | dspDUST | dspH2)
   ,m_bDumpImage(false)
   ,m_galaxy()
@@ -99,36 +98,9 @@ void NBodyWnd::Render()
   glClear(GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT);
 
   Vec3D orient;
-  switch (m_camOrient)
-  {
-  // Default orientation
-  case 0: orient.x = 0;
-          orient.y = 1;
-          orient.z = 0;
-          break;
-
-  // Rotate with galaxy core
-  case 1:
-         {
-           Vec2D p1 = m_galaxy.GetStarPos(0),
-                 p2 = m_galaxy.GetStarPos(1);
-           orient.x = p2.x - p1.x;
-           orient.y = p2.y - p1.y;
-           orient.z = 0;
-          }
-          break;
-
-  // Rotate with edge of disk
-  case 2:
-         {
-           Vec2D p1 = m_galaxy.GetStarPos(0),
-                 p2 = m_galaxy.GetStarPos(2);
-           orient.x = p2.x - p1.x;
-           orient.y = p2.y - p1.y;
-           orient.z = 0;
-          }
-          break;
-  }
+  orient.x = 0;
+  orient.y = 1;
+  orient.z = 0;
 
   Vec3D lookAt(0, 0, 0),
         pos(0, 0, 5000);
@@ -263,18 +235,13 @@ void NBodyWnd::DrawStars()
   glPointSize(3); //pStars[i].m_mag*10);
   glBegin(GL_POINTS);
 
-  if (m_starRenderType==2)
-    glColor3f(1, 1, 1);
   for (int i=1; i<num; ++i)
   {
     const Vec2D &pos = pStars[i].m_pos;
     const Color &col = ColorFromTemperature(pStars[i].m_temp);
-    if (m_starRenderType==1)
-    {
-      glColor3f(col.r * pStars[i].m_mag,
-                col.g * pStars[i].m_mag,
-                col.b * pStars[i].m_mag);
-    }
+    glColor3f(col.r * pStars[i].m_mag,
+              col.g * pStars[i].m_mag,
+              col.b * pStars[i].m_mag);
     glVertex3f(pos.x, pos.y, 0.0f);
 
   }
@@ -422,42 +389,33 @@ void NBodyWnd::DrawHelp()
 #if TARGET_OS_IPHONE==0
   glColor3f(1, 1, 1);
   TextOut(x0, y0 + dy * line++, "Keyboard commands");
-  TextOut(x0, y0 + dy * line++, "Camera");
-  TextOut(x0, y0 + dy * line++, "  1     - centric; fixed"); //////////////////
-  TextOut(x0, y0 + dy * line++, "  2     - centric; rotating with core speed");
-  TextOut(x0, y0 + dy * line++, "  3     - centric; rotating with speed of outer disc");
   TextOut(x0, y0 + dy * line++, "Galaxy geometry");
-  TextOut(x0, y0 + dy * line++, "  q     - increase inner excentricity"); /////////// = how much a curve or orbit deviates from circularity
+  TextOut(x0, y0 + dy * line++, "  q     - increase inner excentricity");
   TextOut(x0, y0 + dy * line++, "  a     - decrease inner excentricity");
   TextOut(x0, y0 + dy * line++, "  w     - increase outer excentricity");
   TextOut(x0, y0 + dy * line++, "  s     - decrease outer excentricity");
   TextOut(x0, y0 + dy * line++, "  e     - increase angular shift of orbits");
-  TextOut(x0, y0 + dy * line++, "  d     - decrease angular shift of orbits"); // Allows negative angular offsets to revers the spiral arm direction.
-            //////////    this one works just need to fine tune the touch control!!!!!!!
-  TextOut(x0, y0 + dy * line++, "  r     - increase core size");///////////////
+  TextOut(x0, y0 + dy * line++, "  d     - decrease angular shift of orbits"); 
+  TextOut(x0, y0 + dy * line++, "  r     - increase core size");
   TextOut(x0, y0 + dy * line++, "  f     - decrease core size");
-  TextOut(x0, y0 + dy * line++, "  t     - increase galaxy size");////////////
+  TextOut(x0, y0 + dy * line++, "  t     - increase galaxy size");
   TextOut(x0, y0 + dy * line++, "  g     - decrease galaxy size");  
   TextOut(x0, y0 + dy * line++, "  y     - increase the speed of the stars at the edge of the galaxy");
-            ///////////// doesn't work!!!!!!
   TextOut(x0, y0 + dy * line++, "  h     - decrease the speed of the stars at the edge of the galaxy");
   TextOut(x0, y0 + dy * line++, "  p     - velocity graph");
   TextOut(x0, y0 + dy * line++, "Display features");
   TextOut(x0, y0 + dy * line++, "  F1    - Help screen");
   TextOut(x0, y0 + dy * line++, "  F2    - Galaxy data");
-  TextOut(x0, y0 + dy * line++, "  F3    - renders stars in white");
   TextOut(x0, y0 + dy * line++, "  F4    - turns off dust");
   TextOut(x0, y0 + dy * line++, "  F5    - turns off H2 regions");
   TextOut(x0, y0 + dy * line++, "  F6    - Density waves (Star orbits)");
   TextOut(x0, y0 + dy * line++, "  F7    - Axis");
   TextOut(x0, y0 + dy * line++, "  F8    - Radii");
-  TextOut(x0, y0 + dy * line++, "  +     - Zoom in");/////////////
+  TextOut(x0, y0 + dy * line++, "  +     - Zoom in");
   TextOut(x0, y0 + dy * line++, "  -     - Zoom out");
   TextOut(x0, y0 + dy * line++, "Misc");
   TextOut(x0, y0 + dy * line++, "  pause - halt simulation");
   TextOut(x0, y0 + dy * line++, "  F12   - Write frames to TGA");
-  TextOut(x0, y0 + dy * line++, "Predefined Galaxies"); ////////////
-  TextOut(x0, y0 + dy * line++, "  Keypad 0 - 8" );
 #endif
 }
 
@@ -474,34 +432,21 @@ NBodyWnd::Color NBodyWnd::ColorFromTemperature(double temp) const
 //------------------------------------------------------------------------------
 void NBodyWnd::OnProcessEvents(SDL_Event &e)
 {
-    if (e.type == SDL_FINGERDOWN) { 
-        if (m_starRenderType==2)
-        {
-            m_starRenderType=0;
-            m_flags &= ~dspSTARS;
-        }
-        else
-        {
-            m_starRenderType++;
-            m_flags |= dspSTARS;
+    
+    // Reverses the spiral arm direction after a couple of taps (or 'd' keystrokes on OS X) 
+    if (e.type == SDL_FINGERDOWN) {
+        if (m_touchControlSetting==7) {
+            m_touchControlSetting=0;
+            m_galaxy.SetAngularOffset(m_galaxy.GetAngularOffset()+0.0007); // back to normal
+        } else {
+            m_touchControlSetting++;
+            m_galaxy.SetAngularOffset(m_galaxy.GetAngularOffset()-0.0001);
         }
     }
     
     if (e.type == SDL_KEYDOWN)
         switch (e.key.keysym.sym)
         {
-          case SDLK_1:
-               m_camOrient = 0;
-               break;
-
-          case SDLK_2:
-               m_camOrient = 1;
-               break;
-
-          case SDLK_3:
-               m_camOrient = 2;
-               break;
-
           case SDLK_q:
                 m_galaxy.SetExInner(m_galaxy.GetExInner() + 0.05);
                 break;
@@ -568,20 +513,6 @@ void NBodyWnd::OnProcessEvents(SDL_Event &e)
                 m_flags &= ~dspHELP;
                 break;
 
-          case  SDLK_F3:
-                std::cout << "Display:  Toggling stars " << ((m_flags & dspSTARS) ? "off" : "on") << "\n";
-                if (m_starRenderType==2)
-                {
-                  m_starRenderType=0;
-                  m_flags &= ~dspSTARS;
-                }
-                else
-                {
-                  m_starRenderType++;
-                  m_flags |= dspSTARS;
-                }
-                break;
-
           case  SDLK_F4:
                 std::cout << "Display:  Toggling dust " << ((m_flags & dspDUST) ? "off" : "on") << "\n";
                 m_flags ^= dspDUST;
@@ -619,124 +550,6 @@ void NBodyWnd::OnProcessEvents(SDL_Event &e)
                 std::cout << "Simulation:  pause " << ((m_flags & dspPAUSE) ? "off" : "on") << "\n";
                 m_flags ^= dspPAUSE;
                 break;
-
-
-//          case SDLK_p:
-//               SaveToTGA();
-//               break;
-
-          case SDLK_KP_1:
-               m_galaxy.Reset(12000,    // radius of the galaxy
-                              4000,     // radius of the core
-                              0.0004,   // angluar offset of the density wave per parsec of radius
-                              0.75,      // excentricity at the edge of the core
-                              0.9,      // excentricity at the edge of the disk
-                              0.5,
-                              200,      // orbital velocity at the edge of the core
-                              300,      // orbital velovity at the edge of the disk
-                              30000);   // total number of stars
-                              break;
-
-          case SDLK_KP_2:
-                m_galaxy.Reset(13000,    // radius of the galaxy
-                               4000,     // radius of the core
-                               0.0004,   // angluar offset of the density wave per parsec of radius
-                               0.9,      // excentricity at the edge of the core
-                               0.9,      // excentricity at the edge of the disk
-                               0.5,
-                               200,      // orbital velocity at the edge of the core
-                               300,      // orbital velovity at the edge of the disk
-                               30000);   // total number of stars
-                               break;
-          case SDLK_KP_3:
-               m_galaxy.Reset(13000,    // radius of the galaxy
-                              4000,     // radius of the core
-                              0.0004,   // angluar offset of the density wave per parsec of radius
-                              1.35,      // excentricity at the edge of the core
-                              1.05,      // excentricity at the edge of the disk
-                              0.5,
-                              200,      // orbital velocity at the edge of the core
-                              300,      // orbital velovity at the edge of the disk
-                              40000);   // total number of stars
-                              break;
-
-          // Typ Sa
-          case SDLK_KP_4:
-               m_galaxy.Reset(20000,    // radius of the galaxy
-                              4000,     // radius of the core
-                              0.0004,   // angluar offset of the density wave per parsec of radius
-                              0.75,      // excentricity at the edge of the core
-                              1.0,      // excentricity at the edge of the disk
-                              0.5,
-                              200,      // orbital velocity at the edge of the core
-                              300,      // orbital velovity at the edge of the disk
-                              40000);   // total number of stars
-                              break;
-
-          // Typ SBb
-          case SDLK_KP_5:
-               m_galaxy.Reset(15000,    // radius of the galaxy
-                              4000,     // radius of the core
-                              0.0003,   // angluar offset of the density wave per parsec of radius
-                              1.45,     // excentricity at the edge of the core
-                              1.0,      // excentricity at the edge of the disk
-                              0.5,
-                              400,      // orbital velocity at the edge of the core
-                              420,      // orbital velovity at the edge of the disk
-                              40000);   // total number of stars
-                              break;
-
-          // zum debuggen
-          case SDLK_KP_6:
-               m_galaxy.Reset(15000,    // radius of the galaxy
-                              4000,     // radius of the core
-                              0.0003,   // angluar offset of the density wave per parsec of radius
-                              1.45,     // excentricity at the edge of the core
-                              1.0,      // excentricity at the edge of the disk
-                              0.5,
-                              400,      // orbital velocity at the edge of the core
-                              200,      // orbital velovity at the edge of the disk
-                              40000);   // total number of stars
-                              break;
-
-          // für Wikipedia: realistische Rotationskurve
-          case SDLK_KP_7:
-               m_galaxy.Reset(12000,    // radius of the galaxy
-                              2000,     // radius of the core
-                              0.0004,   // angluar offset of the density wave per parsec of radius
-                              0.75,      // excentricity at the edge of the core
-                              0.9,      // excentricity at the edge of the disk
-                              0.5,
-                              400,      // orbital velocity at the edge of the core
-                              420,      // orbital velovity at the edge of the disk
-                              30000);   // total number of stars
-                              break;
-
-
-          case SDLK_KP_8:
-               m_galaxy.Reset(12000,    // radius of the galaxy
-                              2000,     // radius of the core
-                              0.0004,   // angluar offset of the density wave per parsec of radius
-                              0.75,      // excentricity at the edge of the core
-                              0.9,      // excentricity at the edge of the disk
-                              0.5,
-                              400,      // orbital velocity at the edge of the core
-                              150,      // orbital velovity at the edge of the disk
-                              30000);   // total number of stars
-                              break;
-
-
-          case SDLK_KP_0:
-               m_galaxy.Reset(15000,    // radius of the galaxy
-                              4000,     // radius of the core
-                              0.000306, // angluar offset of the density wave per parsec of radius
-                              0.8,      // excentricity at the edge of the core
-                              0.85,     // excentricity at the edge of the disk
-                              0.5,
-                              200,      // orbital velocity at the edge of the core
-                              220,      // orbital velovity at the edge of the disk
-                              40000);   // total number of stars
-                              break;
 
           case SDLK_F12:
                m_bDumpImage ^= true;

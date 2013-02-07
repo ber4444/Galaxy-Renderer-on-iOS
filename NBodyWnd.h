@@ -63,8 +63,7 @@ private:
     void DrawEllipse(double a, double b, double angle);
     Color ColorFromTemperature(double temp) const;
     
-    int m_camOrient;    ///< Index of the camera orientation to use
-    int m_starRenderType;
+    int m_touchControlSetting;
     double m_roi;       ///< Radius of the region of interest
     uint32_t m_flags;   ///< The display flags
     bool m_bDumpImage;
