@@ -4,8 +4,7 @@ It's also a cross-platform app development test using C++, OpenGL ES and SDL2 (t
 
 For a possible improvement see this topic on SO: http://stackoverflow.com/questions/12896730/gravity-driven-fluid-dynamics-computation 
 
-And here is a link to another similar project: http://www.youtube.com/watch?v=CbN5PBmvu_0, which is based on this simpler algorithm: http://www.openprocessing.org/sketch/700
-(theoretically, it could be run as-is on the iPhone via the JavaScript bridge, but that is too slow: http://stackoverflow.com/questions/13286555/processing-org-on-ios-natively)
+And here is a link to another similar project: https://github.com/hannorein/OpenGLMilkyWay (and its variations by hannorein). 
 ---------------------------------------------------------------------------------------
 
   ________       .__                        
