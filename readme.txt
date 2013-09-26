@@ -2,7 +2,7 @@
 
 It's also a cross-platform app development test using C++, OpenGL ES and SDL2 (the latter would not be our first choice for new projects). 
 
-For a possible improvement see this topic on SO: http://stackoverflow.com/questions/12896730/gravity-driven-fluid-dynamics-computation 
+For a possible improvement (adding black holes) see this: http://www.gamedev.net/topic/588330-black-hole-distortion/?p=4736190
 
 And here is a link to another similar project: https://github.com/hannorein/OpenGLMilkyWay (and its variations by hannorein). 
 ---------------------------------------------------------------------------------------
