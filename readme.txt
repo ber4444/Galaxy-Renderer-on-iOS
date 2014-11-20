@@ -1,6 +1,8 @@
 (C) 2012 Gabor Berenyi. I forked the original Linux project for an iOS demo, inspired by the default wallpaper of OS X: http://www.tomsguide.com/us/mac-os-x-lion-wallpaper-andromeda,news-12164.html. The code is covered by the BSD-License cited below.
 
-It's also a cross-platform app development test using C++, OpenGL ES and SDL2 (the latter would not be our first choice for new projects). 
+It's also a cross-platform app development test, using tools Google positively recommended: 
+"SDL together with OpenGL(ES) and C++ provide an excellent basis for making great cross platform games". 
+(from http://google.github.io/pienoon/pie_noon_guide_engine.html) 
 
 For a possible improvement (adding black holes) see this: http://www.gamedev.net/topic/588330-black-hole-distortion/?p=4736190
 
